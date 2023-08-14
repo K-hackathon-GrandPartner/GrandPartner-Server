@@ -16,8 +16,8 @@ CREATE TABLE `member`.`profile` (
   `user_id` integer unsigned NOT NULL,
   `image_url` varchar(100),
   `religion` tinyint unsigned NOT NULL COMMENT '1: 개신교, 2: 불교, 3: 천주교, 4: 기타',
-  `join_date` datetime DEFAULT (now()),
-  `update_date` datetime DEFAULT (now())
+  `join_date` datetime DEFAULT CURRENT_TIMESTAMP,
+  `update_date` datetime DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `member`.`authentication` (
