@@ -18,6 +18,7 @@ import * as Joi from 'joi';
         DB_PORT: Joi.string().required(),
         DB_USERNAME: Joi.string().required(),
         DB_PASSWORD: Joi.string().required(),
+        DB_DATABASE: Joi.string().required(),
       }),
     }),
     TypeOrmModule.forRoot({
@@ -26,7 +27,7 @@ import * as Joi from 'joi';
       port: +process.env.DB_PORT,
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
-      database: 'member',
+      database: process.env.DB_DATABASE,
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
     }),
