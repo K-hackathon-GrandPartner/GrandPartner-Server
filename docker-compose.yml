@@ -1,0 +1,17 @@
+version: '3'
+services:
+  mysql-server:
+    image: 'mysql'
+    restart: always
+    environment:
+      MYSQL_DATABASE: grand_partner
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - 3307:3306
+    volumes:
+      - ./mysql:/var/lib/mysql
+    node-app:
+      build: .
+      ports:
+        - '3000:3000'
