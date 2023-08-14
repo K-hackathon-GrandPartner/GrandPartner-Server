@@ -16,6 +16,8 @@ services:
     volumes:
       - /app/node_modules
       - ./backend:/app
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
   mysql:
     build: ./mysql
