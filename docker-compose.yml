@@ -4,9 +4,7 @@ services:
     image: 'mysql'
     restart: always
     environment:
-      MYSQL_DATABASE: grand_partner
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
     ports:
       - 3307:3306
     volumes:
