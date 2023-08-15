@@ -17,6 +17,6 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: 22
         script: |
-            cd $GITHUB_WORKSPACE
+            cd ${{ github.event.repository.name }}
             pwd
             sh deploy-ssh.sh
