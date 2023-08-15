@@ -22,4 +22,5 @@ jobs:
 
     - name: Deploy to VM instance
       run: |
+        ssh-keyscan -H ${{ secrets.GOOGLE_VM_INSTANCE_IP }} >> ~/.ssh/known_hosts
         ssh donghoo158@${{ secrets.GOOGLE_VM_INSTANCE_IP }} "cd /GrandPartner-Server && git pull"
