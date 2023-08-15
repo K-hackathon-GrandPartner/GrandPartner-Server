@@ -22,7 +22,6 @@ jobs:
 
     - name: Prepare SSH directory and known_hosts
       run: |
-        mkdir -p ~/.ssh
         touch ~/.ssh/known_hosts
         ssh-keyscan -H ${{ secrets.VM_INSTANCE_IP }} >> ~/.ssh/known_hosts
         chmod 600 ~/.ssh/known_hosts
