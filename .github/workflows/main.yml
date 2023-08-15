@@ -1,0 +1,26 @@
+name: Deploy to App Engine
+
+on:
+  push:
+    branches:
+      - main # 이벤트를 실행할 브랜치
+
+jobs:
+  deploy_job:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    
+    - name: Setup Google Cloud credentials
+      uses: google-github-actions/setup-gcloud@v0.3.0
+      with:
+        service_account_key: ${{ secrets.GCLOUD_AUTH }}
+        export_default_credentials: true
+    
+    - name: Deploy to App Engine
+      run: gcloud app deploy --version=auto
+    
+    - name: Test deployed app
+      run: curl "$(gcloud app browse --no-launch-browser --version=auto)"
