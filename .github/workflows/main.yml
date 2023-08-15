@@ -40,7 +40,6 @@ jobs:
         uses: 'google-github-actions/deploy-appengine@v1'
         with:
           project_id: 'grand-partner'
-          deliverables: '.appengine_build_output/app.yaml'
 
       # Example of using the output
       - id: 'test'
