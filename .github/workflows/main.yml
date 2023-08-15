@@ -1,28 +1,25 @@
-name: gcp-deploy
+name: Deploy to VM instance
 
 on:
   push:
     branches:
-    - main
+      - main
 
 jobs:
-  workload-identity-connection:
+  deploy-to-vm:
     runs-on: ubuntu-latest
-    # Add "id-token" with the intended permissions.
-    permissions:
-      contents: 'read'
-      id-token: 'write'
 
     steps:
-    - id: 'auth'
-      uses: 'google-github-actions/auth@v0'
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up GCP environment
+      uses: google-github-actions/setup-gcloud@v0
       with:
-        workload_identity_provider: "projects/${{secrets.GOOGLE_PROJECT_NUMBER}}/locations/global/workloadIdentityPools/${{secrets.GOOGLE_FULL_ID}}/providers/${{secrets.GOOGLE_PROVIDER_FULL_ID}}"
-        service_account: ${{secrets.GOOGLE_SERVICE_ACCOUNT}}
+        project_id: ${{ secrets.GOOGLE_PROJECT_NUMBER }}
+        service_account_key: ${{ secrets.GOOGLE_SERVICE_ACCOUNT }}
+        export_default_credentials: true
 
-    - id: 'deploy'
-      uses: 'google-github-actions/deploy-appengine@v1'
-
-    # Example of using the output
-    - id: 'test'
-      run: 'curl "${{ steps.deploy.outputs.url }}"'
+    - name: Deploy to VM instance
+      run: |
+        ssh donghoo158@${{ secrets.GOOGLE_VM_INSTANCE_IP }} "cd /GrandPartner-Server && git pull"
