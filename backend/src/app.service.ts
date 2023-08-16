@@ -11,7 +11,6 @@ export class AppService {
   ) {}
 
   async findAll(): Promise<UserEntity[]> {
-    console.log("test")
     return this.usersRepository.find();
   }
 }
