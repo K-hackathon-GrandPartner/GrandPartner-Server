@@ -3,7 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserEntity } from './app.entity';
+import { RoomModule } from './room/room.module';
+import { UserModule } from './user/user.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -31,7 +32,8 @@ import * as Joi from 'joi';
       entities: ['dist/**/*.entity{.ts,.js}'],
       synchronize: false,
     }),
-    TypeOrmModule.forFeature([UserEntity]),
+    RoomModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
