@@ -1,17 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class RoomResponseDto {
+  @ApiProperty({ description: '방 ID', example: 1 })
+  id: number;
+
   @ApiProperty({ description: '썸네일 이미지 URL' })
   imageUrl: string;
 
   @ApiProperty({
-    description: '방 제목',
-    type: 'string',
-    example: '아파트 · 큰 방',
+    description: '건물 유형',
+    example: '아파트',
   })
-  title: string;
+  buildingType: string;
 
-  @ApiProperty({ description: '방 크기(m^2)', type: 'number', example: 45.6 })
+  @ApiProperty({
+    description: '방 크기(종류)',
+    type: 'string',
+    example: '중형',
+  })
+  roomSizeType: string;
+
+  @ApiProperty({ description: '방 크기(m^2)', type: 'number', example: 16.5 })
   roomSize: number;
 
   @ApiProperty({ description: '방 층수', type: 'number', example: 3 })
@@ -27,8 +36,16 @@ export class RoomResponseDto {
   address: string;
 
   @ApiProperty({
-    description: '상세 설명 일부',
+    description: '방 제목',
+    type: 'string',
     example: '건국대 도보 5분 거리, 즉시 입주 가능.',
   })
-  content: string;
+  title: string;
+
+  @ApiProperty({
+    description: '방 등록 날짜',
+    type: 'string',
+    example: '2021-08-01',
+  })
+  postDate: string;
 }
