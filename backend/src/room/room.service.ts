@@ -3,8 +3,9 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { RoomResponseDto } from './dto/room-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Room } from './entities/Room';
-import { Repository } from 'typeorm';
+import { Room } from './entities/room.entity';
+import { Image } from './entities/image.entity';
+import { In, Repository } from 'typeorm';
 
 @Injectable()
 export class RoomService {
@@ -20,27 +21,24 @@ export class RoomService {
     const roomsFromDatabase = await this.roomRepository
       .createQueryBuilder('room')
       .select([
-        'room.thumbnailImageUrl as imageUrl',
-        'room.title',
-        'room.roomSize',
-        'room.roomFloor',
-        'room.deposit',
-        'room.monthlyRent',
-        'room.address',
-        'room.content',
+        'room.roomSize as room_size',
+        'room.roomFloor as room_floor',
+        'room.deposit as deposit',
+        'room.monthlyRent as monthly_rent',
+        'room.address as address',
       ])
       .getRawMany();
 
     const roomResponseDtos: RoomResponseDto[] = roomsFromDatabase.map(
-      (room) => ({
-        imageUrl: room.imageUrl,
-        title: room.title,
-        roomSize: room.roomSize,
-        roomFloor: room.roomFloor,
-        deposit: room.deposit,
-        monthlyRent: room.monthlyRent,
-        address: room.address,
-        content: room.content,
+      (col) => ({
+        imageUrl: 'http://',
+        title: 'test',
+        roomSize: col.room_size,
+        roomFloor: col.room_floor,
+        deposit: col.deposit,
+        monthlyRent: col.monthly_rent,
+        address: col.address,
+        content: 'test',
       }),
     );
 
