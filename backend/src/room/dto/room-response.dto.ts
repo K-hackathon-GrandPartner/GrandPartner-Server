@@ -4,7 +4,7 @@ export class RoomResponseDto {
   @ApiProperty({ description: '방 ID', example: 1 })
   id: number;
 
-  @ApiProperty({ description: '썸네일 이미지 URL' })
+  @ApiProperty({ description: '썸네일 이미지 URL', example: 'https://...' })
   imageUrl: string;
 
   @ApiProperty({

@@ -30,6 +30,7 @@ export class RoomController {
     return rooms;
   }
 
+  @ApiOperation({ summary: '방 상세 조회 API' })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.roomService.findOne(+id);

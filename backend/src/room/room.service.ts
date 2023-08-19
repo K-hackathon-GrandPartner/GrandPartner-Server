@@ -6,6 +6,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './entities/room.entity';
 import { Image } from './entities/image.entity';
 import { In, Repository } from 'typeorm';
+import {
+  formatDate,
+  formatRoomSizeType,
+  formatBuildingType,
+} from './utils/format';
 
 @Injectable()
 export class RoomService {
@@ -13,6 +18,7 @@ export class RoomService {
     @InjectRepository(Room)
     private readonly roomRepository: Repository<Room>,
   ) {}
+
   create(createRoomDto: CreateRoomDto) {
     return 'This action adds a new room';
   }
@@ -33,28 +39,9 @@ export class RoomService {
       .getRawMany();
 
     const roomResponseDtos = roomsFromDatabase.map((col) => {
-      let roomSizeType = '';
-      let buildingType = '';
-
-      if (col.room_size > 0 && col.room_size <= 3.3 * 3) {
-        roomSizeType = '소형';
-      } else if (col.room_size > 3.3 * 3 && col.room_size <= 3.3 * 5) {
-        roomSizeType = '중형';
-      } else if (col.room_size > 3.3 * 5 && col.room_size <= 3.3 * 6) {
-        roomSizeType = '대형';
-      } else if (col.room_size > 3.3 * 6) {
-        roomSizeType = '대형+';
-      }
-
-      if (col.building_type === 1) {
-        buildingType = '단독주택';
-      } else if (col.building_type === 2) {
-        buildingType = '오피스텔';
-      } else if (col.building_type === 3) {
-        buildingType = '아파트';
-      } else if (col.building_type === 4) {
-        buildingType = '빌라';
-      }
+      const roomSizeType = formatRoomSizeType(col.room_size);
+      const buildingType = formatBuildingType(col.building_type);
+      const postDate = formatDate(col.post_date);
 
       return {
         id: col.id,
@@ -68,7 +55,7 @@ export class RoomService {
         monthlyRent: col.monthly_rent,
         address: col.address,
         title: 'test',
-        postDate: col.post_date,
+        postDate: postDate,
       };
     });
 
