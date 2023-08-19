@@ -35,7 +35,7 @@ export class RoomController {
     type: RoomResponseDto,
     isArray: true,
   })
-  async findAll() {
+  async findAll(): Promise<any> {
     const rooms = await this.roomService.findAll();
     return this.response.success(rooms);
   }

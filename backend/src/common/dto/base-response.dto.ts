@@ -1,9 +1,9 @@
 export class BaseResponseDto {
-  success(result?: any) {
+  success(data: any, message = '성공', statusCode = 200) {
     return {
-      statusCode: 200,
-      message: '성공',
-      result: result,
+      statusCode: statusCode,
+      message: message,
+      data: data,
     };
   }
 }
