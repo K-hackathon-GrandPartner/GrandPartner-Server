@@ -94,6 +94,7 @@ export class RoomService {
 
       return {
         ...omitIds(restRoom, ['status', 'landlordId']),
+        buildingType: formatBuildingType(restRoom.buildingType),
         postDate: formatDate(String(restRoom.postDate)),
         updateDate: formatDate(String(restRoom.updateDate)),
         images: images.map((img) => img.imageUrl),

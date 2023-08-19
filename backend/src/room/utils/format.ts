@@ -33,7 +33,7 @@ export function formatRoomSizeType(roomSize: number) {
   }
 }
 
-export function formatBuildingType(buildingType: string) {
+export function formatBuildingType(buildingType: number) {
   // 건물 유형 포맷팅 로직
   const buildingTypeMapping = {
     1: '단독주택',
