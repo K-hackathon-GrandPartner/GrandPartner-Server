@@ -45,7 +45,7 @@ export class RoomsResponseDto {
   @ApiProperty({
     description: '방 등록 날짜',
     type: 'string',
-    example: '2021-08-01',
+    example: '2023-08-17 08:28:03',
   })
   postDate: string;
 }
