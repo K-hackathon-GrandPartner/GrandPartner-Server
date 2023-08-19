@@ -1,19 +1,27 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Room } from './room.entity';
 
-@Entity("pet", { schema: "room" })
+@Entity('pet', { schema: 'room' })
 export class Pet {
-  @PrimaryGeneratedColumn({ type: "int", name: "id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;
 
-  @Column("int", { name: "room_id", unsigned: true })
+  @OneToOne(() => Room, (room) => room.pet)
+  @JoinColumn({ name: 'room_id' })
   roomId: number;
 
-  @Column("tinyint", { name: "dog", unsigned: true, default: () => "'0'" })
+  @Column('tinyint', { name: 'dog', unsigned: true, default: () => "'0'" })
   dog: number;
 
-  @Column("tinyint", { name: "cat", unsigned: true, default: () => "'0'" })
+  @Column('tinyint', { name: 'cat', unsigned: true, default: () => "'0'" })
   cat: number;
 
-  @Column("tinyint", { name: "etc", unsigned: true, default: () => "'0'" })
+  @Column('tinyint', { name: 'etc', unsigned: true, default: () => "'0'" })
   etc: number;
 }

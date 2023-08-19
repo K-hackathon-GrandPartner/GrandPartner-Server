@@ -10,7 +10,7 @@ import {
 import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
-import { RoomResponseDto } from './dto/room-response.dto';
+import { RoomsResponseDto } from './dto/room-response.dto';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { BaseResponseDto } from 'src/common/dto/base-response.dto';
 
@@ -32,7 +32,7 @@ export class RoomController {
   @ApiResponse({
     status: 200,
     description: '성공',
-    type: RoomResponseDto,
+    type: RoomsResponseDto,
     isArray: true,
   })
   async findAll(): Promise<any> {
@@ -42,8 +42,9 @@ export class RoomController {
 
   @Get(':id')
   @ApiOperation({ summary: '방 상세 조회 API' })
-  findOne(@Param('id') id: string) {
-    return this.roomService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<any> {
+    const room = await this.roomService.findOne(+id);
+    return this.response.success(room);
   }
 
   @Patch(':id')

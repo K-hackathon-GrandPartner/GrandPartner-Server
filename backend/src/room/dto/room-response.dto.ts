@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class RoomResponseDto {
+export class RoomsResponseDto {
   @ApiProperty({ description: '방 ID', example: 1 })
   id: number;
 
@@ -48,4 +48,15 @@ export class RoomResponseDto {
     example: '2021-08-01',
   })
   postDate: string;
+}
+
+export class RoomResponseDto {
+  @ApiProperty({ description: '방 ID', example: 1 })
+  id: number;
+
+  @ApiProperty({
+    description: '이미지 URL들',
+    example: [{ imageUrl: 'http://1' }],
+  })
+  images: string[];
 }

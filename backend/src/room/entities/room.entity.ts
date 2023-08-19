@@ -5,8 +5,13 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { CareService } from './care_service.entity';
 import { Detail } from './detail.entity';
 import { Image } from './image.entity';
+import { Option } from './option.entity';
+import { Pet } from './pet.entity';
+import { Rule } from './rule.entity';
+import { Safety } from './safety.entity';
 
 @Entity('room', { schema: 'room' })
 export class Room {
@@ -67,6 +72,21 @@ export class Room {
   @OneToMany(() => Image, (image) => image.roomId)
   images: Image[];
 
+  @OneToMany(() => CareService, (careService) => careService.roomId)
+  careServices: CareService[];
+
   @OneToOne(() => Detail, (detail) => detail.roomId)
   detail: Detail;
+
+  @OneToOne(() => Option, (option) => option.roomId)
+  option: Option;
+
+  @OneToOne(() => Rule, (rule) => rule.roomId)
+  rule: Rule;
+
+  @OneToOne(() => Safety, (safety) => safety.roomId)
+  safety: Safety;
+
+  @OneToOne(() => Pet, (pet) => pet.roomId)
+  pet: Pet;
 }

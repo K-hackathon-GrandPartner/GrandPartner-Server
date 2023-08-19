@@ -23,6 +23,6 @@ export class Image {
   })
   thumbnail: number;
 
-  @Column('varchar', { name: 'image_url', length: 100 })
+  @Column('text', { name: 'image_url' })
   imageUrl: string;
 }

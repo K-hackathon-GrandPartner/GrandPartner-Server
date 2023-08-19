@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
-import { RoomResponseDto } from './dto/room-response.dto';
+import { RoomsResponseDto, RoomResponseDto } from './dto/room-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './entities/room.entity';
 import { Repository } from 'typeorm';
@@ -9,6 +9,8 @@ import {
   formatDate,
   formatRoomSizeType,
   formatBuildingType,
+  omitId,
+  omitIds,
 } from './utils/format';
 
 @Injectable()
@@ -16,14 +18,16 @@ export class RoomService {
   constructor(
     @InjectRepository(Room)
     private readonly roomRepository: Repository<Room>,
-  ) {}
+  ) {
+    this.roomRepository = roomRepository;
+  }
 
   create(createRoomDto: CreateRoomDto) {
     return 'This action adds a new room';
   }
 
-  async findAll(): Promise<RoomResponseDto[]> {
-    const roomsFromDatabase = await this.roomRepository
+  async findAll(): Promise<RoomsResponseDto[]> {
+    const rooms = await this.roomRepository
       .createQueryBuilder('room')
       .leftJoinAndSelect('room.images', 'image')
       .leftJoinAndSelect('room.detail', 'detail')
@@ -48,7 +52,7 @@ export class RoomService {
       })
       .getRawMany();
 
-    return roomsFromDatabase.map((col) => ({
+    return rooms.map((col) => ({
       id: col.id,
       imageUrl: col.imageUrl,
       buildingType: formatBuildingType(col.buildingType),
@@ -63,8 +67,46 @@ export class RoomService {
     }));
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} room`;
+  async findOne(id: number): Promise<any> {
+    const room = await this.roomRepository
+      .createQueryBuilder('room')
+      .leftJoinAndSelect('room.images', 'image')
+      .leftJoinAndSelect('room.detail', 'detail')
+      .leftJoinAndSelect('room.option', 'option')
+      .leftJoinAndSelect('room.rule', 'rule')
+      .leftJoinAndSelect('room.safety', 'safety')
+      .leftJoinAndSelect('room.careServices', 'careService')
+      .leftJoinAndSelect('room.pet', 'pet')
+      .where('room.id = :id', { id })
+      .getOne();
+
+    if (room) {
+      const {
+        images,
+        detail,
+        option,
+        rule,
+        safety,
+        careServices,
+        pet,
+        ...restRoom
+      } = room;
+
+      return {
+        ...omitIds(restRoom, ['status', 'landlordId']),
+        postDate: formatDate(String(restRoom.postDate)),
+        updateDate: formatDate(String(restRoom.updateDate)),
+        images: images.map((img) => img.imageUrl),
+        detail: omitId(detail),
+        option: omitId(option),
+        rule: omitId(rule),
+        safety: omitId(safety),
+        pet: omitId(pet),
+        careServices: careServices.map((service) => service.content),
+      };
+    }
+
+    return null; // 해당 id에 해당하는 room이 없을 경우
   }
 
   update(id: number, updateRoomDto: UpdateRoomDto) {

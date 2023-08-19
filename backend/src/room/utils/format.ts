@@ -1,5 +1,19 @@
 import { format } from 'date-fns';
 
+export function omitId(obj: any): any {
+  const { id, ...rest } = obj;
+  return rest;
+}
+
+export function omitIds(obj: any, ids: string[]): any {
+  const rest = { ...obj };
+  ids.forEach((id) => {
+    delete rest[id];
+  });
+  console.log(rest);
+  return rest;
+}
+
 export function formatDate(date: string) {
   // 날짜 및 시간 포맷팅 로직
   const formatDate = new Date(date);

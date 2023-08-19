@@ -1,13 +1,21 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Room } from './room.entity';
 
-@Entity("care_service", { schema: "room" })
+@Entity('care_service', { schema: 'room' })
 export class CareService {
-  @PrimaryGeneratedColumn({ type: "int", name: "id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;
 
-  @Column("int", { name: "room_id", unsigned: true })
+  @ManyToOne(() => Room, (room) => room.careServices)
+  @JoinColumn({ name: 'room_id' })
   roomId: number;
 
-  @Column("varchar", { name: "content", nullable: true, length: 128 })
+  @Column('varchar', { name: 'content', nullable: true, length: 128 })
   content: string | null;
 }
