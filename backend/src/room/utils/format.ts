@@ -8,13 +8,13 @@ export function formatDate(date: string) {
 
 export function formatRoomSizeType(roomSize: number) {
   // 방 크기(종류) 포맷팅 로직
-  if (roomSize > 0 && roomSize <= 3.3 * 3) {
+  if (roomSize > 0 && roomSize < 13.22314) {
     return '소형';
-  } else if (roomSize > 3.3 * 3 && roomSize <= 3.3 * 5) {
+  } else if (roomSize >= 13.22314 && roomSize < 16.528926) {
     return '중형';
-  } else if (roomSize > 3.3 * 5 && roomSize <= 3.3 * 6) {
+  } else if (roomSize >= 16.528926 && roomSize < 19.834711) {
     return '대형';
-  } else if (roomSize > 3.3 * 6) {
+  } else if (roomSize >= 19.834711) {
     return '대형+';
   }
 }

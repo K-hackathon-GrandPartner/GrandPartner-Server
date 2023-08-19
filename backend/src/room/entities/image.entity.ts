@@ -1,20 +1,28 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Room } from './room.entity';
 
-@Entity("image", { schema: "room" })
+@Entity('image', { schema: 'room' })
 export class Image {
-  @PrimaryGeneratedColumn({ type: "int", name: "id", unsigned: true })
+  @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;
 
-  @Column("int", { name: "room_id", unsigned: true })
-  roomId: number;
+  @ManyToOne(() => Room, (room) => room.images)
+  @JoinColumn({ name: 'room_id' })
+  roomId: Room;
 
-  @Column("int", {
-    name: "thumbnail",
-    comment: "0: 일반, 1: 썸네일",
+  @Column('int', {
+    name: 'thumbnail',
+    comment: '0: 일반, 1: 썸네일',
     unsigned: true,
   })
   thumbnail: number;
 
-  @Column("varchar", { name: "image_url", length: 100 })
+  @Column('varchar', { name: 'image_url', length: 100 })
   imageUrl: string;
 }

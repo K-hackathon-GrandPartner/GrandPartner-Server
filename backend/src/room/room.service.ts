@@ -4,8 +4,7 @@ import { UpdateRoomDto } from './dto/update-room.dto';
 import { RoomResponseDto } from './dto/room-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './entities/room.entity';
-import { Image } from './entities/image.entity';
-import { In, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import {
   formatDate,
   formatRoomSizeType,
@@ -26,40 +25,42 @@ export class RoomService {
   async findAll(): Promise<RoomResponseDto[]> {
     const roomsFromDatabase = await this.roomRepository
       .createQueryBuilder('room')
+      .leftJoinAndSelect('room.images', 'image')
+      .leftJoinAndSelect('room.detail', 'detail')
       .select([
         'room.id as id',
-        'room.buildingType as building_type',
-        'room.roomSize as room_size',
-        'room.roomFloor as room_floor',
+        'COALESCE(image.imageUrl, :defaultImageUrl) as imageUrl',
+        'room.buildingType as buildingType',
+        'room.roomSize as roomSize',
+        'room.roomFloor as roomFloor',
         'room.deposit as deposit',
-        'room.monthlyRent as monthly_rent',
+        'room.monthlyRent as monthlyRent',
         'room.address as address',
-        'room.postDate as post_date',
+        'detail.title as title',
+        'COALESCE(detail.title, :defaultTitle) as title',
+        'room.postDate as postDate',
       ])
+      .where('(image.thumbnail = 1 OR image.thumbnail IS NULL)')
+      .setParameters({
+        defaultImageUrl:
+          'https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/163687953364064240.jpg?gif=1&w=480&h=480&c=c&q=80&webp=1',
+        defaultTitle: '건국대 도보 5분 거리, 즉시 입주 가능.',
+      })
       .getRawMany();
 
-    const roomResponseDtos = roomsFromDatabase.map((col) => {
-      const roomSizeType = formatRoomSizeType(col.room_size);
-      const buildingType = formatBuildingType(col.building_type);
-      const postDate = formatDate(col.post_date);
-
-      return {
-        id: col.id,
-        imageUrl:
-          'https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/163687953364064240.jpg?gif=1&w=480&h=480&c=c&q=80&webp=1',
-        buildingType: buildingType,
-        roomSizeType: roomSizeType,
-        roomSize: col.room_size,
-        roomFloor: col.room_floor,
-        deposit: col.deposit,
-        monthlyRent: col.monthly_rent,
-        address: col.address,
-        title: 'test',
-        postDate: postDate,
-      };
-    });
-
-    return roomResponseDtos;
+    return roomsFromDatabase.map((col) => ({
+      id: col.id,
+      imageUrl: col.imageUrl,
+      buildingType: formatBuildingType(col.buildingType),
+      roomSizeType: formatRoomSizeType(col.roomSize),
+      roomSize: col.roomSize,
+      roomFloor: col.roomFloor,
+      deposit: col.deposit,
+      monthlyRent: col.monthlyRent,
+      address: col.address,
+      title: col.title || '건국대 도보 5분 거리, 즉시 입주 가능.', // 기본 제목 적용
+      postDate: formatDate(col.postDate),
+    }));
   }
 
   findOne(id: number) {

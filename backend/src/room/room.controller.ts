@@ -11,27 +11,37 @@ import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { RoomResponseDto } from './dto/room-response.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { BaseResponseDto } from 'src/common/dto/base-response.dto';
 
 @Controller('room')
 @ApiTags('Room')
 export class RoomController {
-  constructor(private readonly roomService: RoomService) {}
+  private response: BaseResponseDto;
+  constructor(private readonly roomService: RoomService) {
+    this.response = new BaseResponseDto();
+  }
 
   @Post()
   create(@Body() createRoomDto: CreateRoomDto) {
     return this.roomService.create(createRoomDto);
   }
 
-  @ApiOperation({ summary: '방 조회 API' })
   @Get()
-  async findAll(): Promise<RoomResponseDto[]> {
+  @ApiOperation({ summary: '방 조회 API' })
+  @ApiResponse({
+    status: 200,
+    description: '성공',
+    type: RoomResponseDto,
+    isArray: true,
+  })
+  async findAll() {
     const rooms = await this.roomService.findAll();
-    return rooms;
+    return this.response.success(rooms);
   }
 
-  @ApiOperation({ summary: '방 상세 조회 API' })
   @Get(':id')
+  @ApiOperation({ summary: '방 상세 조회 API' })
   findOne(@Param('id') id: string) {
     return this.roomService.findOne(+id);
   }
