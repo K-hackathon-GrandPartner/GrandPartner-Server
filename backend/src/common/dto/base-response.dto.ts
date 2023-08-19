@@ -3,7 +3,7 @@ export class BaseResponseDto {
     return {
       statusCode: statusCode,
       message: message,
-      data: data,
+      result: data,
     };
   }
 }
