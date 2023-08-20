@@ -6,13 +6,21 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { RoomResponseDto, RoomsResponseDto } from './dto/room-response.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiOperation,
+  ApiParam,
+  ApiQuery,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { BaseResponseDto } from 'src/common/dto/base-response.dto';
+import { RegionsQueryDto } from './dto/filter-room.dto';
 
 @Controller('room')
 @ApiTags('Room')
@@ -35,8 +43,72 @@ export class RoomController {
     type: RoomsResponseDto,
     isArray: true,
   })
-  async findAll() {
-    const rooms = await this.roomService.findAll();
+  @ApiQuery({
+    name: 'startDeposit',
+    required: false,
+    description: '보증금(만원) 시작 범위',
+    example: 0,
+  })
+  @ApiQuery({
+    name: 'endDeposit',
+    required: false,
+    description: '보증금(만원) 끝 범위',
+    example: 1000,
+  })
+  @ApiQuery({
+    name: 'startMonthlyRent',
+    required: false,
+    description: '월세(만원) 시작 범위',
+    example: 20,
+  })
+  @ApiQuery({
+    name: 'endMonthlyRent',
+    required: false,
+    description: '월세(만원) 끝 범위',
+    example: 100,
+  })
+  @ApiQuery({
+    name: 'regions',
+    required: false,
+    description: '지역(광진구, 노원구, 성북구)',
+    examples: {
+      regions0: {
+        summary: '지역 0개 선택',
+        value: ['광진구', '노원구', '성북구'],
+      },
+      regions1: {
+        summary: '지역 1개 선택',
+        value: ['노원구'],
+      },
+      regions2: {
+        summary: '지역 2개 선택',
+        value: ['광진구', '노원구'],
+      },
+      regions3: {
+        summary: '지역 3개 선택',
+        value: ['광진구', '노원구', '성북구'],
+      },
+    },
+  })
+  async findAll(
+    @Query('startDeposit') startDeposit?: string,
+    @Query('endDeposit') endDeposit?: string,
+    @Query('startMonthlyRent') startMonthlyRent?: string,
+    @Query('endMonthlyRent') endMonthlyRent?: string,
+    @Query('regions') regions?: string[],
+  ) {
+    if (startDeposit === undefined) startDeposit = '0';
+    if (endDeposit === undefined) endDeposit = '100000';
+    if (startMonthlyRent === undefined) startMonthlyRent = '0';
+    if (endMonthlyRent === undefined) endMonthlyRent = '100000';
+    if (regions === undefined) regions = ['광진구', '노원구', '성북구'];
+    const rooms = await this.roomService.findAll(
+      +startDeposit,
+      +endDeposit,
+      +startMonthlyRent,
+      +endMonthlyRent,
+      typeof regions === 'string' ? [regions] : regions,
+    );
     return this.response.success(rooms);
   }
 
@@ -47,8 +119,14 @@ export class RoomController {
     description: '성공',
     type: RoomResponseDto,
   })
-  async findOne(@Param('id') id: string) {
-    const room = await this.roomService.findOne(+id);
+  @ApiParam({
+    name: 'id',
+    required: true,
+    description: '방 ID',
+    example: 1,
+  })
+  async findOne(@Param('id') id: number) {
+    const room = await this.roomService.findOne(id);
     return this.response.success(room);
   }
 

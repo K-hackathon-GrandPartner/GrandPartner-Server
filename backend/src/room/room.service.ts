@@ -26,8 +26,28 @@ export class RoomService {
     return 'This action adds a new room';
   }
 
-  async findAll(): Promise<RoomsResponseDto[]> {
-    const rooms = await this.roomRepository
+  async findAll(
+    startDeposit: number,
+    endDeposit: number,
+    startMonthlyRent: number,
+    endMonthlyRent: number,
+    regions: string[],
+  ): Promise<RoomsResponseDto[]> {
+    const defaultImageUrl =
+      'https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/163687953364064240.jpg?gif=1&w=480&h=480&c=c&q=80&webp=1';
+    const defaultTitle = '건국대 도보 5분 거리, 즉시 입주 가능.';
+
+    const whereConditions = regions.map((region, index) => {
+      return `(room.address LIKE :region${index})`;
+    });
+
+    const whereClause = whereConditions.join(' OR ');
+
+    const queryParams = {};
+    regions.forEach((region, index) => {
+      queryParams[`region${index}`] = `%${region}%`;
+    });
+    let query = this.roomRepository
       .createQueryBuilder('room')
       .leftJoinAndSelect('room.images', 'image')
       .leftJoinAndSelect('room.detail', 'detail')
@@ -45,12 +65,15 @@ export class RoomService {
         'room.postDate as postDate',
       ])
       .where('(image.thumbnail = 1 OR image.thumbnail IS NULL)')
-      .setParameters({
-        defaultImageUrl:
-          'https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/163687953364064240.jpg?gif=1&w=480&h=480&c=c&q=80&webp=1',
-        defaultTitle: '건국대 도보 5분 거리, 즉시 입주 가능.',
-      })
-      .getRawMany();
+      .andWhere('room.deposit >= :startDeposit', { startDeposit })
+      .andWhere('room.deposit <= :endDeposit', { endDeposit })
+      .andWhere('room.monthlyRent >= :startMonthlyRent', { startMonthlyRent })
+      .andWhere('room.monthlyRent <= :endMonthlyRent', { endMonthlyRent })
+      .andWhere(whereClause, queryParams)
+      .setParameters({ defaultImageUrl, defaultTitle });
+
+    const rooms = await query.getRawMany();
+    console.log(rooms);
 
     return rooms.map((col) => ({
       id: col.id,
