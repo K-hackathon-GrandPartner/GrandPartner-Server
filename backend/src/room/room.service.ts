@@ -67,7 +67,7 @@ export class RoomService {
     }));
   }
 
-  async findOne(id: number): Promise<any> {
+  async findOne(id: number): Promise<RoomResponseDto> {
     const room = await this.roomRepository
       .createQueryBuilder('room')
       .leftJoinAndSelect('room.images', 'image')
