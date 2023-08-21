@@ -122,7 +122,7 @@ export class RoomResponseDto {
     curfew: number;
     smoking: number;
     drinking: number;
-    religion: number;
+    religion: string;
   };
 
   @ApiProperty({

@@ -11,6 +11,7 @@ import {
   formatBuildingType,
   omitId,
   omitIds,
+  formatReligion,
 } from './utils/format';
 
 @Injectable()
@@ -123,7 +124,10 @@ export class RoomService {
         images: images.map((img) => img.imageUrl),
         detail: omitId(detail),
         option: omitId(option),
-        rule: omitId(rule),
+        rule: {
+          ...omitId(rule),
+          religion: formatReligion(rule.religion), // 종교 값을 포맷한 값으로 설정합니다.
+        },
         safety: omitId(safety),
         pet: omitId(pet),
         careServices: careServices.map((service) => service.content),

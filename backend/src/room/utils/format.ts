@@ -43,3 +43,15 @@ export function formatBuildingType(buildingType: number) {
   };
   return buildingTypeMapping[buildingType];
 }
+
+export function formatReligion(religion: number) {
+  // 종교 포맷팅 로직
+  console.log(religion);
+  const religionMapping = {
+    0: '상관 없음',
+    1: '개신교',
+    2: '불교',
+    3: '천주교',
+  };
+  return religionMapping[religion];
+}
