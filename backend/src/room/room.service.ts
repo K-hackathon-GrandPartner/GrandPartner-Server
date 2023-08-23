@@ -12,7 +12,13 @@ import {
   omitId,
   omitIds,
   formatReligion,
+  formatBuildingTypeToNumber,
+  formatRoomSizeTypeToNumber,
 } from './utils/format';
+import {
+  roomSizeWhereClause,
+  stringArrayWhereClause,
+} from './utils/whereClause';
 
 @Injectable()
 export class RoomService {
@@ -33,21 +39,22 @@ export class RoomService {
     startMonthlyRent: number,
     endMonthlyRent: number,
     regions: string[],
+    buildingTypes: string[],
+    roomSizeTypes: string[],
   ): Promise<RoomsResponseDto[]> {
     const defaultImageUrl =
       'https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/163687953364064240.jpg?gif=1&w=480&h=480&c=c&q=80&webp=1';
     const defaultTitle = '건국대 도보 5분 거리, 즉시 입주 가능.';
 
-    const whereConditions = regions.map((region, index) => {
-      return `(room.address LIKE :region${index})`;
+    const [regionWhereClause, regionQueryParams] = stringArrayWhereClause(
+      'address',
+      regions,
+    );
+
+    buildingTypes = buildingTypes.map((buildingType) => {
+      return formatBuildingTypeToNumber(buildingType);
     });
 
-    const whereClause = whereConditions.join(' OR ');
-
-    const queryParams = {};
-    regions.forEach((region, index) => {
-      queryParams[`region${index}`] = `%${region}%`;
-    });
     let query = this.roomRepository
       .createQueryBuilder('room')
       .leftJoinAndSelect('room.images', 'image')
@@ -70,11 +77,21 @@ export class RoomService {
       .andWhere('room.deposit <= :endDeposit', { endDeposit })
       .andWhere('room.monthlyRent >= :startMonthlyRent', { startMonthlyRent })
       .andWhere('room.monthlyRent <= :endMonthlyRent', { endMonthlyRent })
-      .andWhere(whereClause, queryParams)
+      .andWhere('room.buildingType IN (:...buildingTypes)', {
+        buildingTypes,
+      })
+      .andWhere(regionWhereClause, regionQueryParams)
+      .andWhere(`(${roomSizeWhereClause(roomSizeTypes)})`, {
+        smallRoomSize: 0,
+        mediumRoomSize: 13.22314,
+        largeRoomSize: 16.528926,
+        extraLargeRoomSize: 19.834711,
+      })
       .setParameters({ defaultImageUrl, defaultTitle });
 
+    console.log(query.getSql());
+
     const rooms = await query.getRawMany();
-    console.log(rooms);
 
     return rooms.map((col) => ({
       id: col.id,

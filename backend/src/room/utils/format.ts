@@ -33,6 +33,19 @@ export function formatRoomSizeType(roomSize: number) {
   }
 }
 
+export function formatRoomSizeTypeToNumber(roomSize: string) {
+  // 방 크기(종류) 포맷팅 로직
+  if (roomSize === '소형') {
+    return [0, 13.22314];
+  } else if (roomSize === '중형') {
+    return [13.22314, 16.528926];
+  } else if (roomSize === '대형') {
+    return [16.528926, 19.834711];
+  } else if (roomSize === '대형+') {
+    return [19.834711, 100000];
+  }
+}
+
 export function formatBuildingType(buildingType: number) {
   // 건물 유형 포맷팅 로직
   const buildingTypeMapping = {
@@ -40,6 +53,17 @@ export function formatBuildingType(buildingType: number) {
     2: '오피스텔',
     3: '아파트',
     4: '빌라',
+  };
+  return buildingTypeMapping[buildingType];
+}
+
+export function formatBuildingTypeToNumber(buildingType: string) {
+  // 건물 유형 포맷팅 로직
+  const buildingTypeMapping = {
+    '단독 주택': 1,
+    오피스텔: 2,
+    아파트: 3,
+    빌라: 4,
   };
   return buildingTypeMapping[buildingType];
 }
