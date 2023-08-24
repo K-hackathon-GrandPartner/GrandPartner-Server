@@ -10,7 +10,6 @@ export function omitIds(obj: any, ids: string[]): any {
   ids.forEach((id) => {
     delete rest[id];
   });
-  console.log(rest);
   return rest;
 }
 
@@ -36,13 +35,13 @@ export function formatRoomSizeType(roomSize: number) {
 export function formatRoomSizeTypeToNumber(roomSize: string) {
   // 방 크기(종류) 포맷팅 로직
   if (roomSize === '소형') {
-    return [0, 13.22314];
+    return 0;
   } else if (roomSize === '중형') {
-    return [13.22314, 16.528926];
+    return 13.22314;
   } else if (roomSize === '대형') {
-    return [16.528926, 19.834711];
+    return 16.528926;
   } else if (roomSize === '대형+') {
-    return [19.834711, 100000];
+    return 19.834711;
   }
 }
 
@@ -70,7 +69,6 @@ export function formatBuildingTypeToNumber(buildingType: string) {
 
 export function formatReligion(religion: number) {
   // 종교 포맷팅 로직
-  console.log(religion);
   const religionMapping = {
     0: '상관 없음',
     1: '개신교',
@@ -78,4 +76,24 @@ export function formatReligion(religion: number) {
     3: '천주교',
   };
   return religionMapping[religion];
+}
+
+export function formatRoomOption(option: string) {
+  // 방 옵션 포맷팅 로직
+  const roomOptionMapping = {
+    욕실: 'bathroom',
+    침대: 'bed',
+    에어컨: 'airConditioner',
+    책상: 'desk',
+    '무료 주차': 'freeParking',
+    '무선 인터넷': 'wifi',
+    '주방 공유': 'kitchen',
+    '세탁기 공유': 'washer',
+    엘리베이터: 'elevator',
+    '유료 주차': 'paidParking',
+    옷장: 'closet',
+    TV: 'tv',
+  };
+
+  return roomOptionMapping[option];
 }

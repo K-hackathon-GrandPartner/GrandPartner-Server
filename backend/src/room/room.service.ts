@@ -4,7 +4,7 @@ import { UpdateRoomDto } from './dto/update-room.dto';
 import { RoomsResponseDto, RoomResponseDto } from './dto/room-response.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './entities/room.entity';
-import { Repository } from 'typeorm';
+import { Brackets, Repository } from 'typeorm';
 import {
   formatDate,
   formatRoomSizeType,
@@ -14,6 +14,7 @@ import {
   formatReligion,
   formatBuildingTypeToNumber,
   formatRoomSizeTypeToNumber,
+  formatRoomOption,
 } from './utils/format';
 import {
   roomSizeWhereClause,
@@ -41,15 +42,16 @@ export class RoomService {
     regions: string[],
     buildingTypes: string[],
     roomSizeTypes: string[],
-  ): Promise<RoomsResponseDto[]> {
-    const defaultImageUrl =
-      'https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/163687953364064240.jpg?gif=1&w=480&h=480&c=c&q=80&webp=1';
-    const defaultTitle = '건국대 도보 5분 거리, 즉시 입주 가능.';
-
+    roomOptions: string[],
+  ): Promise<any> {
     const [regionWhereClause, regionQueryParams] = stringArrayWhereClause(
       'address',
       regions,
     );
+
+    roomOptions = roomOptions.map((roomOption) => {
+      return formatRoomOption(roomOption);
+    });
 
     buildingTypes = buildingTypes.map((buildingType) => {
       return formatBuildingTypeToNumber(buildingType);
@@ -61,7 +63,7 @@ export class RoomService {
       .leftJoinAndSelect('room.detail', 'detail')
       .select([
         'room.id as id',
-        'COALESCE(image.imageUrl, :defaultImageUrl) as imageUrl',
+        'image.imageUrl as imageUrl',
         'room.buildingType as buildingType',
         'room.roomSize as roomSize',
         'room.roomFloor as roomFloor',
@@ -69,33 +71,60 @@ export class RoomService {
         'room.monthlyRent as monthlyRent',
         'room.address as address',
         'detail.title as title',
-        'COALESCE(detail.title, :defaultTitle) as title',
         'room.postDate as postDate',
       ])
-      .where('(image.thumbnail = 1 OR image.thumbnail IS NULL)')
-      .andWhere('room.deposit >= :startDeposit', { startDeposit })
-      .andWhere('room.deposit <= :endDeposit', { endDeposit })
-      .andWhere('room.monthlyRent >= :startMonthlyRent', { startMonthlyRent })
-      .andWhere('room.monthlyRent <= :endMonthlyRent', { endMonthlyRent })
-      .andWhere('room.buildingType IN (:...buildingTypes)', {
-        buildingTypes,
+      .where('room.deposit BETWEEN :startDeposit AND :endDeposit', {
+        startDeposit,
+        endDeposit,
       })
-      .andWhere(regionWhereClause, regionQueryParams)
-      .andWhere(`(${roomSizeWhereClause(roomSizeTypes)})`, {
-        smallRoomSize: 0,
-        mediumRoomSize: 13.22314,
-        largeRoomSize: 16.528926,
-        extraLargeRoomSize: 19.834711,
-      })
-      .setParameters({ defaultImageUrl, defaultTitle });
+      .andWhere(
+        'room.monthlyRent BETWEEN :startMonthlyRent AND :endMonthlyRent',
+        {
+          startMonthlyRent,
+          endMonthlyRent,
+        },
+      )
+      .andWhere('(image.thumbnail = 1 OR image.thumbnail IS NULL)')
+      .andWhere(
+        new Brackets((qb) => {
+          qb.where(regionWhereClause, regionQueryParams);
+        }),
+      )
+      .andWhere(
+        new Brackets((qb) => {
+          qb.where('room.buildingType IN (:...buildingTypes)', {
+            buildingTypes,
+          });
+        }),
+      )
+      .andWhere(
+        new Brackets((qb) => {
+          qb.where(roomSizeWhereClause(roomSizeTypes), {
+            smallRoomSize: formatRoomSizeTypeToNumber('소형'),
+            mediumRoomSize: formatRoomSizeTypeToNumber('중형'),
+            largeRoomSize: formatRoomSizeTypeToNumber('대형'),
+            extraLargeRoomSize: formatRoomSizeTypeToNumber('대형+'),
+          });
+        }),
+      );
 
-    console.log(query.getSql());
-
+    if (roomOptions.length > 0) {
+      query = query.leftJoinAndSelect('room.option', 'option');
+      query = query.andWhere(
+        new Brackets((qb) => {
+          roomOptions.forEach((roomOption, index) => {
+            qb.andWhere(`option.${roomOption} = 1`);
+          });
+        }),
+      );
+    }
     const rooms = await query.getRawMany();
 
     return rooms.map((col) => ({
       id: col.id,
-      imageUrl: col.imageUrl,
+      imageUrl:
+        col.imageUrl ||
+        'https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/163687953364064240.jpg?gif=1&w=480&h=480&c=c&q=80&webp=1',
       buildingType: formatBuildingType(col.buildingType),
       roomSizeType: formatRoomSizeType(col.roomSize),
       roomSize: col.roomSize,
@@ -139,7 +168,10 @@ export class RoomService {
         postDate: formatDate(String(restRoom.postDate)),
         updateDate: formatDate(String(restRoom.updateDate)),
         images: images.map((img) => img.imageUrl),
-        detail: omitId(detail),
+        detail: {
+          ...omitId(detail),
+          title: detail.title,
+        },
         option: omitId(option),
         rule: {
           ...omitId(rule),

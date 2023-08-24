@@ -51,7 +51,7 @@ export class RoomsResponseDto {
 }
 
 export class RoomResponseDto {
-  @ApiProperty({ description: '방 ID', example: 1 })
+  @ApiProperty({ description: '방 ID', example: 13 })
   id: number;
 
   @ApiProperty({ description: '월세(만원)', example: 30 })

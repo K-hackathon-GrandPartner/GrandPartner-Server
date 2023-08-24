@@ -33,7 +33,7 @@ export function roomSizeWhereClause(roomSizeTypes: string[]) {
     .filter((condition) => condition !== null)
     .join(' OR ');
 
-  console.log(combinedSizeConditions);
-
   return combinedSizeConditions;
 }
+
+export function roomOptionWhereClause(roomOptions: string[]) {}
