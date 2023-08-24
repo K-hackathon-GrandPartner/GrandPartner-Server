@@ -13,6 +13,7 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { RoomResponseDto, RoomsResponseDto } from './dto/room-response.dto';
 import {
+  ApiBody,
   ApiOperation,
   ApiParam,
   ApiQuery,
@@ -30,7 +31,44 @@ export class RoomController {
   }
 
   @Post()
+  @ApiOperation({ summary: '방 등록 API' })
+  @ApiResponse({
+    status: 201,
+    description: '성공',
+  })
+  @ApiBody({
+    type: CreateRoomDto,
+    description: '방 등록 정보',
+    examples: {
+      createRoomDto: {
+        summary: '방 등록 정보',
+        value: {
+          images: [
+            'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwk',
+          ],
+          deposit: 500,
+          monthlyRent: 30,
+          buildingType: '아파트',
+          buildingFloor: 3,
+          roomFloor: 3,
+          roomSize: 16.5,
+          moveInDate: '8월 중순 가능',
+          roomOptions: ['에어컨', '욕실', '침대'],
+          commuteTime: 22,
+          smoking: false,
+          drinking: false,
+          religion: '개신교',
+          careServices: ['주 1회 장보기', '월 2회 외출 도움'],
+          safetyFacilities: ['CCTV', '화재 경보기'],
+          pets: ['강아지', '고양이'],
+          title: '방 제목',
+          description: '방 상세 설명',
+        },
+      },
+    },
+  })
   create(@Body() createRoomDto: CreateRoomDto) {
+    console.log(createRoomDto);
     return this.roomService.create(createRoomDto);
   }
 
@@ -159,16 +197,6 @@ export class RoomController {
     if (roomSizeTypes === undefined)
       roomSizeTypes = ['소형', '중형', '대형', '대형+'];
     if (roomOptions === undefined) roomOptions = [];
-    console.log(
-      startDeposit,
-      endDeposit,
-      startMonthlyRent,
-      endMonthlyRent,
-      regions,
-      buildingTypes,
-      roomSizeTypes,
-      roomOptions,
-    );
     const rooms = await this.roomService.findAll(
       +startDeposit,
       +endDeposit,
