@@ -68,7 +68,6 @@ export class RoomController {
     },
   })
   create(@Body() createRoomDto: CreateRoomDto) {
-    console.log(createRoomDto);
     return this.roomService.create(createRoomDto);
   }
 
