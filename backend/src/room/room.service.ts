@@ -36,7 +36,6 @@ export class RoomService {
   }
 
   async findAll(filterDto: RoomFilterDto): Promise<any> {
-    console.log(filterDto);
     let {
       startDeposit,
       endDeposit,

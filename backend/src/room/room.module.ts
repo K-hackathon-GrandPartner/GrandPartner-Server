@@ -3,7 +3,6 @@ import { RoomService } from './room.service';
 import { RoomController } from './room.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Room } from './entities/room.entity';
-import { Image } from './entities/image.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
@@ -22,7 +21,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: false,
       }),
     }),
-    TypeOrmModule.forFeature([Room, Image]),
+    TypeOrmModule.forFeature([Room]),
   ],
   controllers: [RoomController],
   providers: [RoomService],

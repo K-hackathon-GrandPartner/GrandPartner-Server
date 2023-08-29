@@ -4,7 +4,11 @@ export class RoomsResponseDto {
   @ApiProperty({ description: '방 ID', example: 1 })
   id: number;
 
-  @ApiProperty({ description: '썸네일 이미지 URL', example: 'https://...' })
+  @ApiProperty({
+    description: '썸네일 이미지 URL',
+    example:
+      'https://storage.cloud.google.com/grand-partner-bucket/rooms/room-1-1',
+  })
   imageUrl: string;
 
   @ApiProperty({

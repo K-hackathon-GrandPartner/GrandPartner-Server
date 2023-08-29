@@ -1,12 +1,16 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { RequestMethod, ValidationPipe } from '@nestjs/common';
+import { join } from 'path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
   // API 경로 설정
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix('api', {
+    exclude: [{ path: 'admin', method: RequestMethod.GET }],
+  });
 
   // Swagger 설정
   const config = new DocumentBuilder()
@@ -24,6 +28,10 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  app.useStaticAssets(join(__dirname, '..', 'client'), { prefix: '/client' });
+  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setViewEngine('pug');
 
   await app.listen(3000);
 }
