@@ -1,5 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsArray, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsArray,
+  IsIn,
+  IsNumber,
+  IsNumberString,
+  IsOptional,
+  IsString,
+  Validate,
+  ValidateNested,
+} from 'class-validator';
 
 const allowedRegions = ['광진구', '노원구', '성북구']; // 허용할 지역 목록
 const allowedBuildingTypes = ['아파트', '오피스텔', '빌라', '단독 주택']; // 허용할 건물 유형 목록
@@ -19,16 +29,40 @@ const allowedRoomOptions = [
   'TV',
 ];
 
-export class RegionsQueryDto {
-  @ApiProperty({ type: [String] })
-  @IsArray()
-  @IsString({ each: true })
-  readonly regions: string[];
-}
+export class RoomFilterDto {
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  startDeposit: number = 0;
 
-export class BuildingTypesQueryDto {
-  @ApiProperty({ type: [String] })
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  endDeposit: number = 100000;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  startMonthlyRent: number = 0;
+
+  @IsOptional()
+  @IsNumber()
+  @Type(() => Number)
+  endMonthlyRent: number = 100000;
+
+  @IsOptional()
   @IsArray()
-  @IsString({ each: true })
-  readonly buildingTypes: string[];
+  regions: string[] = allowedRegions;
+
+  @IsOptional()
+  @IsArray()
+  buildingTypes: string[] = allowedBuildingTypes;
+
+  @IsOptional()
+  @IsArray()
+  roomSizeTypes: string[] = allowedRoomSizeTypes;
+
+  @IsOptional()
+  @IsArray()
+  roomOptions: string[] = [];
 }

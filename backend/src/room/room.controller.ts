@@ -21,6 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { BaseResponseDto } from 'src/common/dto/base-response.dto';
+import { RoomFilterDto } from './dto/filter-room.dto';
 
 @Controller('room')
 @ApiTags('Room')
@@ -176,36 +177,8 @@ export class RoomController {
       },
     },
   })
-  async findAll(
-    @Query('startDeposit') startDeposit?: string,
-    @Query('endDeposit') endDeposit?: string,
-    @Query('startMonthlyRent') startMonthlyRent?: string,
-    @Query('endMonthlyRent') endMonthlyRent?: string,
-    @Query('regions') regions?: string[],
-    @Query('buildingTypes') buildingTypes?: string[],
-    @Query('roomSizeTypes') roomSizeTypes?: string[],
-    @Query('roomOptions') roomOptions?: string[],
-  ) {
-    if (startDeposit === undefined) startDeposit = '0';
-    if (endDeposit === undefined) endDeposit = '100000';
-    if (startMonthlyRent === undefined) startMonthlyRent = '0';
-    if (endMonthlyRent === undefined) endMonthlyRent = '100000';
-    if (regions === undefined) regions = ['광진구', '노원구', '성북구'];
-    if (buildingTypes === undefined)
-      buildingTypes = ['아파트', '오피스텔', '빌라', '단독 주택'];
-    if (roomSizeTypes === undefined)
-      roomSizeTypes = ['소형', '중형', '대형', '대형+'];
-    if (roomOptions === undefined) roomOptions = [];
-    const rooms = await this.roomService.findAll(
-      +startDeposit,
-      +endDeposit,
-      +startMonthlyRent,
-      +endMonthlyRent,
-      typeof regions === 'string' ? [regions] : regions,
-      typeof buildingTypes === 'string' ? [buildingTypes] : buildingTypes,
-      typeof roomSizeTypes === 'string' ? [roomSizeTypes] : roomSizeTypes,
-      typeof roomOptions === 'string' ? [roomOptions] : roomOptions,
-    );
+  async findAll(@Query() filterDto: RoomFilterDto) {
+    const rooms = await this.roomService.findAll(filterDto);
     return this.response.success(rooms);
   }
 

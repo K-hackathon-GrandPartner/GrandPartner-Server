@@ -20,6 +20,7 @@ import {
   roomSizeWhereClause,
   stringArrayWhereClause,
 } from './utils/whereClause';
+import { RoomFilterDto } from './dto/filter-room.dto';
 
 @Injectable()
 export class RoomService {
@@ -34,16 +35,18 @@ export class RoomService {
     return 'This action adds a new room';
   }
 
-  async findAll(
-    startDeposit: number,
-    endDeposit: number,
-    startMonthlyRent: number,
-    endMonthlyRent: number,
-    regions: string[],
-    buildingTypes: string[],
-    roomSizeTypes: string[],
-    roomOptions: string[],
-  ): Promise<any> {
+  async findAll(filterDto: RoomFilterDto): Promise<any> {
+    console.log(filterDto);
+    let {
+      startDeposit,
+      endDeposit,
+      startMonthlyRent,
+      endMonthlyRent,
+      regions,
+      buildingTypes,
+      roomSizeTypes,
+      roomOptions,
+    } = filterDto;
     const [regionWhereClause, regionQueryParams] = stringArrayWhereClause(
       'address',
       regions,
@@ -122,9 +125,7 @@ export class RoomService {
 
     return rooms.map((col) => ({
       id: col.id,
-      imageUrl:
-        col.imageUrl ||
-        'https://image.ohou.se/i/bucketplace-v2-development/uploads/cards/163687953364064240.jpg?gif=1&w=480&h=480&c=c&q=80&webp=1',
+      imageUrl: col.imageUrl,
       buildingType: formatBuildingType(col.buildingType),
       roomSizeType: formatRoomSizeType(col.roomSize),
       roomSize: col.roomSize,

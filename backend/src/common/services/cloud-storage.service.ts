@@ -2,7 +2,6 @@ import { ConfigService } from '@nestjs/config';
 
 import { Bucket, Storage } from '@google-cloud/storage';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { parse } from 'path';
 
 @Injectable()
 export class CloudStorageService {
