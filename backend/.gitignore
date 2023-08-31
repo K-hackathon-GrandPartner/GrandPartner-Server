@@ -36,3 +36,6 @@ lerna-debug.log*
 
 # environment setup
 .env*
+
+# pug
+firebase.js
