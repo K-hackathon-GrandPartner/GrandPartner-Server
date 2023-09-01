@@ -7,5 +7,4 @@ import {
 const test = ref(db, 'messages/' + 'admin_1-user_1/');
 onValue(test, (snapshot) => {
   const data = snapshot.val();
-  console.log(data);
 });

@@ -1,0 +1,32 @@
+extends ../layouts/base
+
+block header
+  .header-container
+    a(href="/") 
+      i.fa-solid.fa-arrow-left
+    h1#room-name
+    i.fa-solid.fa-bars
+
+block content
+  div(id="message-input-container")
+    input(type="text" id="message-input")
+    div(id="message-input-button-container")
+      div(id="message-input-button_left")
+        i(onclick="handleImageClick()").fa-solid.fa-image
+        i(onclick="handleCanvasClick()").fa-solid.fa-paint-brush
+      div(id="message-input-button_right")
+        button(onclick="sendMessage()") 전송
+  div(id="image-container").except-content
+    input(type="file" id="image-input" multiple="multiple" accept="image/*")
+    button(onclick="sendImage()") Send Image
+  div(id="canvas-container").except-content
+    canvas#jsCanvas
+    button(onclick="sendCanvas()") Send Canvas
+
+  div#chat-container
+
+block scripts
+  script(src="/client/js/chatSocket.js")
+  script(src="/client/js/chat.js")
+  script(src="/client/js/canvas.js")
+  

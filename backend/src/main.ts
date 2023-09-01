@@ -30,7 +30,7 @@ async function bootstrap() {
   );
 
   app.useStaticAssets(join(__dirname, '..', 'client'), { prefix: '/client' });
-  app.setBaseViewsDir(join(__dirname, '..', 'views'));
+  app.setBaseViewsDir(join(__dirname, '..', 'views', 'pages'));
   app.setViewEngine('pug');
 
   await app.listen(3000);
