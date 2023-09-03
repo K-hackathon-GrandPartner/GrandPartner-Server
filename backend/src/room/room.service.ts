@@ -124,7 +124,9 @@ export class RoomService {
 
     return rooms.map((col) => ({
       id: col.id,
-      imageUrl: col.imageUrl,
+      imageUrl:
+        col.imageUrl ||
+        'https://storage.cloud.google.com/grand-partner-bucket/rooms/base.jpeg',
       buildingType: formatBuildingType(col.buildingType),
       roomSizeType: formatRoomSizeType(col.roomSize),
       roomSize: col.roomSize,
