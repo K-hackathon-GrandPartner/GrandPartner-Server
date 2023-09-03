@@ -126,7 +126,7 @@ export class RoomService {
       id: col.id,
       imageUrl:
         col.imageUrl ||
-        'https://storage.cloud.google.com/grand-partner-bucket/rooms/base.jpeg',
+        'https://storage.googleapis.com/grand-partner-bucket/rooms/base.jpeg',
       buildingType: formatBuildingType(col.buildingType),
       roomSizeType: formatRoomSizeType(col.roomSize),
       roomSize: col.roomSize,
