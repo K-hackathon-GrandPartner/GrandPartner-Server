@@ -126,7 +126,7 @@ export class RoomService {
       id: col.id,
       imageUrl:
         col.imageUrl ||
-        'https://img.maisonkorea.com/2020/03/msk_5e65a1179ab47.jpg',
+        'https://storage.cloud.google.com/grand-partner-bucket/rooms/base.jpeg',
       buildingType: formatBuildingType(col.buildingType),
       roomSizeType: formatRoomSizeType(col.roomSize),
       roomSize: col.roomSize,
