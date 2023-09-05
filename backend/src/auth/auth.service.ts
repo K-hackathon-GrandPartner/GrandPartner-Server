@@ -1,10 +1,17 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { UserService } from 'src/user/user.service';
 import { LoginRequestDto } from './dto/login.dto';
 import axios from 'axios';
+import { InjectRepository } from '@nestjs/typeorm';
+import { SocialLogin } from './entities/social_login.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AuthService {
+  constructor(
+    @InjectRepository(SocialLogin)
+    private readonly socialLoginRepository: Repository<SocialLogin>,
+  ) {}
+
   async login(data: LoginRequestDto) {
     const { accessToken, loginType } = data;
     let userId;
@@ -21,7 +28,7 @@ export class AuthService {
     return userId;
   }
 
-  async getUserIdByKakaoToken(accessToken: string): Promise<string> {
+  private async getUserIdByKakaoToken(accessToken: string): Promise<any> {
     let user;
     try {
       user = await axios.get('https://kapi.kakao.com/v2/user/me', {
@@ -32,7 +39,12 @@ export class AuthService {
     } catch (err) {
       throw new HttpException('유효하지 않은 액세스 토큰입니다.', 400);
     }
-    const { id } = user.data;
-    return id;
+    const userId = await this.getUserFindById(user.data.id);
+    console.log(userId);
+  }
+
+  async getUserFindById(id: number): Promise<any> {
+    const user = await this.socialLoginRepository.findOne({ where: { id } });
+    console.log(user);
   }
 }
