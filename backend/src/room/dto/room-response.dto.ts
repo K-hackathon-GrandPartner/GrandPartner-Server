@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiOperation, ApiProperty } from '@nestjs/swagger';
 
 export class RoomsResponseDto {
   @ApiProperty({ description: '방 ID', example: 1 })
@@ -54,6 +54,14 @@ export class RoomsResponseDto {
   postDate: string;
 }
 
+class CoordinateDto {
+  @ApiProperty({ description: '주소 위도', example: 37.5466 })
+  lat: number;
+
+  @ApiProperty({ description: '주소 경도', example: 127.0713 })
+  lng: number;
+}
+
 export class RoomResponseDto {
   @ApiProperty({ description: '방 ID', example: 13 })
   id: number;
@@ -79,8 +87,11 @@ export class RoomResponseDto {
   @ApiProperty({ description: '입주 가능일', example: '중순협의' })
   moveInDate: string;
 
-  @ApiProperty({ description: '주소', example: '광진구 화양동 21-20' })
+  @ApiProperty({ description: '도로명 주소', example: '광진구 화양동' })
   address: string;
+
+  @ApiProperty({ description: '좌표', type: CoordinateDto })
+  coordinate: CoordinateDto;
 
   @ApiProperty({ description: '방 등록 날짜', example: '2023-08-17 08:28:03' })
   postDate: string;

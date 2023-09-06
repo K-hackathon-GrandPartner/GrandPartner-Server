@@ -149,6 +149,7 @@ export class RoomService {
       .leftJoinAndSelect('room.safety', 'safety')
       .leftJoinAndSelect('room.careServices', 'careService')
       .leftJoinAndSelect('room.pet', 'pet')
+      .leftJoinAndSelect('room.real_address', 'real_address')
       .where('room.id = :id', { id })
       .getOne();
 
@@ -161,11 +162,16 @@ export class RoomService {
         safety,
         careServices,
         pet,
+        real_address,
         ...restRoom
       } = room;
 
       return {
         ...omitIds(restRoom, ['status', 'landlordId']),
+        coordinate: {
+          lat: real_address.lat,
+          lng: real_address.lng,
+        },
         buildingType: formatBuildingType(restRoom.buildingType),
         postDate: formatDate(String(restRoom.postDate)),
         updateDate: formatDate(String(restRoom.updateDate)),

@@ -12,6 +12,7 @@ import { Option } from './option.entity';
 import { Pet } from './pet.entity';
 import { Rule } from './rule.entity';
 import { Safety } from './safety.entity';
+import { Address } from './address.entity';
 
 @Entity('room', { schema: 'room' })
 export class Room {
@@ -89,4 +90,7 @@ export class Room {
 
   @OneToOne(() => Pet, (pet) => pet.roomId)
   pet: Pet;
+
+  @OneToOne(() => Address, (address) => address.roomId)
+  real_address: Address;
 }
