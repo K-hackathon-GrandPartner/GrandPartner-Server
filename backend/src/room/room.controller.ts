@@ -19,15 +19,15 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { BaseResponseDto } from 'src/common/dto/base-response.dto';
+import { ResponseDto } from 'src/common/dto/base-response.dto';
 import { RoomFilterDto } from './dto/filter-room.dto';
 
 @Controller('room')
 @ApiTags('Room')
 export class RoomController {
-  private response: BaseResponseDto;
+  private readonly response: ResponseDto;
   constructor(private readonly roomService: RoomService) {
-    this.response = new BaseResponseDto();
+    this.response = new ResponseDto(200, '성공', null); // 초기화
   }
 
   @Post()
@@ -79,9 +79,10 @@ export class RoomController {
     type: RoomsResponseDto,
     isArray: true,
   })
-  async findAll(@Query() filterDto: RoomFilterDto) {
+  async findAll(@Query() filterDto: RoomFilterDto): Promise<ResponseDto> {
     const rooms = await this.roomService.findAll(filterDto);
-    return this.response.success(rooms);
+    this.response.result = rooms;
+    return this.response;
   }
 
   @Get(':id')
@@ -97,9 +98,10 @@ export class RoomController {
     description: '방 ID',
     example: 13,
   })
-  async findOne(@Param('id') id: number) {
+  async findOne(@Param('id') id: number): Promise<ResponseDto> {
     const room = await this.roomService.findOne(id);
-    return this.response.success(room);
+    this.response.result = room;
+    return this.response;
   }
 
   @Patch(':id')

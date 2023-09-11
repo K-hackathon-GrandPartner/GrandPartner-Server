@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SocialLogin } from './entities/social_login.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
+import { HttpService } from '@nestjs/axios';
 
 @Injectable()
 export class AuthService {
@@ -12,6 +13,7 @@ export class AuthService {
     @InjectRepository(SocialLogin)
     private readonly socialLoginRepository: Repository<SocialLogin>,
     private readonly jwtService: JwtService,
+    private readonly httpService: HttpService,
   ) {}
 
   async login(data: LoginRequestDto) {
@@ -27,19 +29,19 @@ export class AuthService {
       default:
         break;
     }
-    // TODO: JWT 토큰 발급
     const [accessToken, refreshToken] = await Promise.all([
       this.generateAccessToken(userId),
       this.generateRefreshToken(userId),
     ]);
-    console.log(accessToken, refreshToken);
-    return userId;
+
+    return accessToken;
   }
 
   protected async generateAccessToken(userId: number): Promise<any> {
     return this.jwtService.signAsync(
       { user_id: userId },
       {
+        secret: process.env.JWT_SECRET_KEY,
         expiresIn: '1h',
         subject: 'access_token',
       },
@@ -50,6 +52,7 @@ export class AuthService {
     return this.jwtService.signAsync(
       { user_id: userId },
       {
+        secret: process.env.JWT_SECRET_KEY,
         expiresIn: '14d',
         subject: 'refresh_token',
       },
