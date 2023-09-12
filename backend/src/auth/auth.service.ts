@@ -1,4 +1,4 @@
-import { HttpException, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { LoginRequestDto } from './dto/login.dto';
 import axios from 'axios';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -71,7 +71,11 @@ export class AuthService {
       throw new HttpException('유효하지 않은 액세스 토큰입니다.', 400);
     }
     const userData = await this.getUserFindByExternalId(user.data.id);
-    if (!userData) return; // TODO: 회원가입 로직 추가
+    if (!userData)
+      throw new HttpException(
+        '유저가 존재하지 않습니다. 회원가입을 진행해주세요.',
+        HttpStatus.UNAUTHORIZED,
+      );
     return userData.userId;
   }
 
