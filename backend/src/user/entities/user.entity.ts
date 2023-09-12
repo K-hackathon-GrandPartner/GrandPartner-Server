@@ -29,6 +29,7 @@ export class User {
     name: 'status',
     comment: '1: 활성화, 2: 휴면, 3: 탈퇴',
     unsigned: true,
+    default: () => 1,
   })
   status: number;
 

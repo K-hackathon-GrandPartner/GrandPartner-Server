@@ -4,15 +4,10 @@ import { AuthController } from './auth.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SocialLogin } from './entities/social_login.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { HttpModule } from '@nestjs/axios';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    HttpModule.register({
-      timeout: 5000,
-      maxRedirects: 5,
-    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

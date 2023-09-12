@@ -5,7 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SocialLogin } from './entities/social_login.entity';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
-import { HttpService } from '@nestjs/axios';
+import { formatSex } from 'src/room/utils/format';
 
 @Injectable()
 export class AuthService {
@@ -13,7 +13,6 @@ export class AuthService {
     @InjectRepository(SocialLogin)
     private readonly socialLoginRepository: Repository<SocialLogin>,
     private readonly jwtService: JwtService,
-    private readonly httpService: HttpService,
   ) {}
 
   async login(data: LoginRequestDto) {
@@ -71,11 +70,20 @@ export class AuthService {
       throw new HttpException('유효하지 않은 액세스 토큰입니다.', 400);
     }
     const userData = await this.getUserFindByExternalId(user.data.id);
-    if (!userData)
+    if (!userData) {
       throw new HttpException(
-        '유저가 존재하지 않습니다. 회원가입을 진행해주세요.',
+        {
+          statusCode: HttpStatus.UNAUTHORIZED,
+          message: '유저가 존재하지 않습니다. 회원가입을 진행해주세요.',
+          result: {
+            nickname: user.data.kakao_account.profile.nickname,
+            profileImage: user.data.kakao_account.profile.profile_image_url,
+            gender: formatSex(user.data.kakao_account.gender),
+          },
+        },
         HttpStatus.UNAUTHORIZED,
       );
+    }
     return userData.userId;
   }
 

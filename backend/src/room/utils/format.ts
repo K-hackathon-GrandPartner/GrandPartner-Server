@@ -97,3 +97,9 @@ export function formatRoomOption(option: string) {
 
   return roomOptionMapping[option];
 }
+
+export function formatSex(sex: string): string {
+  if (sex === 'male') return '남성';
+  else if (sex === 'female') return '여성';
+  else return '기타';
+}
