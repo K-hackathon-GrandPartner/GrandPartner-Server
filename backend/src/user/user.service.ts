@@ -12,9 +12,8 @@ export class UserService {
   ) {}
 
   async createUser(createUserData: CreateUserDto): Promise<User> {
-    const { loginType, name } = createUserData;
+    const { name } = createUserData;
     const result = await this.userRepository.save({
-      loginType: +loginType,
       userName: name,
     });
     return result;

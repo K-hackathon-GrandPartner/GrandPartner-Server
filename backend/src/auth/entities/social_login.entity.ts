@@ -18,9 +18,6 @@ export class SocialLogin {
   @Column('varchar', { name: 'external_id', length: 64 })
   externalId: string;
 
-  @Column('varchar', { name: 'access_token', length: 256 })
-  accessToken: string;
-
   @Column('timestamp', {
     name: 'update_date',
     default: () => 'CURRENT_TIMESTAMP',

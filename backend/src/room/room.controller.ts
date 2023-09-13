@@ -27,7 +27,7 @@ import { RoomFilterDto } from './dto/filter-room.dto';
 export class RoomController {
   private readonly response: ResponseDto;
   constructor(private readonly roomService: RoomService) {
-    this.response = new ResponseDto(200, '성공', null); // 초기화
+    this.response = new ResponseDto(200, '성공'); // 초기화
   }
 
   @Post()

@@ -76,6 +76,7 @@ export class AuthService {
           statusCode: HttpStatus.UNAUTHORIZED,
           message: '유저가 존재하지 않습니다. 회원가입을 진행해주세요.',
           result: {
+            externalId: user.data.id,
             nickname: user.data.kakao_account.profile.nickname,
             profileImage: user.data.kakao_account.profile.profile_image_url,
             gender: formatSex(user.data.kakao_account.gender),
@@ -87,7 +88,7 @@ export class AuthService {
     return userData.userId;
   }
 
-  private async getUserFindByExternalId(id: number): Promise<any> {
+  async getUserFindByExternalId(id: number): Promise<any> {
     const user = await this.socialLoginRepository
       .createQueryBuilder('social_login')
       .where('social_login.externalId = :id', { id })

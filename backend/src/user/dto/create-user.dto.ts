@@ -1,5 +1,5 @@
 export class CreateUserDto {
-  loginType: string;
+  externalId: number;
   name: string;
   sex: string;
   cellPhone: string;
