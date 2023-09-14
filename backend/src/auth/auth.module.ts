@@ -5,6 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SocialLogin } from './entities/social_login.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/user/user.service';
+import { User } from 'src/user/entities/user.entity';
 
 @Module({
   imports: [
@@ -22,9 +24,9 @@ import { JwtService } from '@nestjs/jwt';
         synchronize: false,
       }),
     }),
-    TypeOrmModule.forFeature([SocialLogin]),
+    TypeOrmModule.forFeature([SocialLogin, User]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtService],
+  providers: [AuthService, JwtService, UserService],
 })
 export class AuthModule {}

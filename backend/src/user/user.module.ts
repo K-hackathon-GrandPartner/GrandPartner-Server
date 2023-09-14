@@ -4,6 +4,9 @@ import { UserController } from './user.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthService } from 'src/auth/auth.service';
+import { SocialLogin } from 'src/auth/entities/social_login.entity';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -21,9 +24,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         synchronize: false,
       }),
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([User, SocialLogin]),
   ],
   controllers: [UserController],
-  providers: [UserService],
+  providers: [UserService, AuthService, JwtService],
 })
 export class UserModule {}

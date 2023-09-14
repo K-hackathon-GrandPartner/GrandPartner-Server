@@ -97,4 +97,19 @@ export class AuthService {
       return user;
     }
   }
+
+  async updateUserByExternalId(
+    externalId: number,
+    userId: number,
+  ): Promise<any> {
+    const user = await this.socialLoginRepository
+      .createQueryBuilder()
+      .update()
+      .set({ userId: userId })
+      .where('externalId = :externalId', {
+        externalId: externalId,
+      })
+      .execute();
+    return user;
+  }
 }

@@ -8,11 +8,15 @@ import {
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/base-response.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
+import { UserService } from 'src/user/user.service';
 
 @Controller('auth')
 @ApiTags('Auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+  ) {}
 
   @Post('login')
   @ApiOperation({ summary: '로그인 API' })
@@ -71,5 +75,6 @@ export class AuthController {
     if (!isExist) return new ResponseDto(400, '유효하지 않은 식별 ID입니다.');
     if (isExist.userId) return new ResponseDto(400, '이미 가입된 유저입니다.');
     //TODO: 회원가입 로직
+    const result = await this.userService.createUser(data);
   }
 }

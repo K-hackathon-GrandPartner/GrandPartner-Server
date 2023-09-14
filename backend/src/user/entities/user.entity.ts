@@ -3,7 +3,7 @@ import { Profile } from './profile.entity';
 import { EnrollmentVerification } from './enrollment_verification.entity';
 import { Authentication } from './authentication.entity';
 
-@Entity('user', { schema: 'member' })
+@Entity('user', { database: 'member' })
 export class User {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;
