@@ -7,6 +7,9 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from 'src/user/user.service';
 import { User } from 'src/user/entities/user.entity';
+import { Profile } from 'src/user/entities/profile.entity';
+import { EnrollmentVerification } from 'src/user/entities/enrollment_verification.entity';
+import { Authentication } from 'src/user/entities/authentication.entity';
 
 @Module({
   imports: [
@@ -24,7 +27,13 @@ import { User } from 'src/user/entities/user.entity';
         synchronize: false,
       }),
     }),
-    TypeOrmModule.forFeature([SocialLogin, User]),
+    TypeOrmModule.forFeature([
+      SocialLogin,
+      User,
+      Profile,
+      EnrollmentVerification,
+      Authentication,
+    ]),
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtService, UserService],
