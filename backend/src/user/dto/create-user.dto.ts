@@ -66,7 +66,7 @@ export class CreateUserDto {
 
   @ApiProperty({
     description: '유저 종교',
-    example: '무교',
+    example: '없음',
   })
   @IsIn(['천주교', '불교', '개신교', '없음'])
   religion?: string = '없음';
