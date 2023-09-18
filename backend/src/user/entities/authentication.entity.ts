@@ -8,8 +8,8 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Index('email', ['email'], { unique: true })
-@Entity('authentication', { schema: 'member' })
+@Index('cellPhone', ['cellPhone'], { unique: true })
+@Entity('authentication', { database: 'member' })
 export class Authentication {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;
@@ -20,9 +20,6 @@ export class Authentication {
 
   @Column('varchar', { name: 'cell_phone', length: 128 })
   cellPhone: string;
-
-  @Column('varchar', { name: 'email', unique: true, length: 128 })
-  email: string;
 
   @Column('tinyint', {
     name: 'sex',

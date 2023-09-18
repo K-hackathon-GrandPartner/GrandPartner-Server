@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('profile', { schema: 'member' })
+@Entity('profile', { database: 'member' })
 export class Profile {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;
@@ -21,7 +21,7 @@ export class Profile {
 
   @Column('tinyint', {
     name: 'religion',
-    comment: '1: 개신교, 2: 불교, 3: 천주교, 4: 기타',
+    comment: '1: 개신교, 2: 불교, 3: 천주교, 4: 없음',
     unsigned: true,
   })
   religion: number;

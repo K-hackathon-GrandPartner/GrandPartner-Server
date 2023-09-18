@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmpty, IsNotEmpty } from 'class-validator';
+import { IsEmpty, IsIn, IsNotEmpty } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -68,7 +68,8 @@ export class CreateUserDto {
     description: '유저 종교',
     example: '무교',
   })
-  religion?: string;
+  @IsIn(['천주교', '불교', '개신교', '없음'])
+  religion?: string = '없음';
 
   @ApiProperty({
     description: '유저 대학교',

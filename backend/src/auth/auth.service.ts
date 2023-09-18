@@ -71,6 +71,7 @@ export class AuthService {
     }
     const userData = await this.getUserFindByExternalId(user.data.id);
     if (!userData) {
+      await this.createSocialLogin(user.data.id, 1);
       throw new HttpException(
         {
           statusCode: HttpStatus.UNAUTHORIZED,
@@ -110,6 +111,17 @@ export class AuthService {
         externalId: externalId,
       })
       .execute();
+    return user;
+  }
+
+  private async createSocialLogin(
+    externalId: string,
+    socialCode: number,
+  ): Promise<any> {
+    const user = await this.socialLoginRepository.save({
+      externalId: externalId,
+      socialCode: socialCode,
+    });
     return user;
   }
 }

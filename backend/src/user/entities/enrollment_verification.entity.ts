@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Entity('enrollment_verification', { schema: 'member' })
+@Entity('enrollment_verification', { database: 'member' })
 export class EnrollmentVerification {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;
