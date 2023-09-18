@@ -17,6 +17,16 @@ async function bootstrap() {
     .setTitle('Grand Partner API')
     .setDescription(`Grand Partner API 문서입니다.`)
     .setVersion('1.0')
+    //JWT 토큰 설정
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        name: 'JWT',
+        in: 'header',
+      },
+      'accessToken',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/v1/docs', app, document, {

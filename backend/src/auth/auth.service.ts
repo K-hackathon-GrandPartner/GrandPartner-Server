@@ -40,7 +40,7 @@ export class AuthService {
     return this.jwtService.signAsync(
       { user_id: userId },
       {
-        secret: process.env.JWT_SECRET_KEY,
+        secret: 'process.env.JWT_SECRET_KEY',
         expiresIn: '1h',
         subject: 'access_token',
       },

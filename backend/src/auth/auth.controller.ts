@@ -9,6 +9,7 @@ import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/base-response.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
+import { TokenDto } from './dto/common-token.dto';
 
 @Controller('auth')
 @ApiTags('Auth')

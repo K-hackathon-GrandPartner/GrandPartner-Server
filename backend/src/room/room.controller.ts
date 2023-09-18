@@ -7,13 +7,16 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { RoomResponseDto, RoomsResponseDto } from './dto/room-response.dto';
 import {
+  ApiBearerAuth,
   ApiBody,
+  ApiExcludeEndpoint,
   ApiOperation,
   ApiParam,
   ApiResponse,
@@ -21,6 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/base-response.dto';
 import { RoomFilterDto } from './dto/filter-room.dto';
+import { AuthGuard } from 'src/common/services/auth_guard.service';
 
 @Controller('room')
 @ApiTags('Room')
@@ -30,6 +34,7 @@ export class RoomController {
     this.response = new ResponseDto(200, '성공'); // 초기화
   }
 
+  @ApiExcludeEndpoint()
   @Post()
   @ApiOperation({ summary: '방 등록 API' })
   @ApiResponse({
@@ -71,6 +76,8 @@ export class RoomController {
     return this.roomService.create(createRoomDto);
   }
 
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('accessToken')
   @Get()
   @ApiOperation({ summary: '방 조회 API' })
   @ApiResponse({
@@ -85,6 +92,8 @@ export class RoomController {
     return this.response;
   }
 
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('accessToken')
   @Get(':id')
   @ApiOperation({ summary: '방 상세 조회 API' })
   @ApiResponse({
@@ -102,15 +111,5 @@ export class RoomController {
     const room = await this.roomService.findOne(id);
     this.response.result = room;
     return this.response;
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoomDto: UpdateRoomDto) {
-    return this.roomService.update(+id, updateRoomDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.roomService.remove(+id);
   }
 }

@@ -4,6 +4,8 @@ import { RoomController } from './room.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Room } from './entities/room.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthGuard } from 'src/common/services/auth_guard.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -24,6 +26,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     TypeOrmModule.forFeature([Room]),
   ],
   controllers: [RoomController],
-  providers: [RoomService],
+  providers: [RoomService, AuthGuard, JwtService],
 })
 export class RoomModule {}
