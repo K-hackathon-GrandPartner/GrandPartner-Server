@@ -36,7 +36,7 @@ export class AuthService {
     return accessToken;
   }
 
-  protected async generateAccessToken(userId: number): Promise<any> {
+  async generateAccessToken(userId: number): Promise<any> {
     return this.jwtService.signAsync(
       { user_id: userId },
       {
@@ -47,7 +47,7 @@ export class AuthService {
     );
   }
 
-  protected async generateRefreshToken(userId: number): Promise<any> {
+  async generateRefreshToken(userId: number): Promise<any> {
     return this.jwtService.signAsync(
       { user_id: userId },
       {
@@ -70,8 +70,8 @@ export class AuthService {
       throw new HttpException('유효하지 않은 액세스 토큰입니다.', 400);
     }
     const userData = await this.getUserFindByExternalId(user.data.id);
-    if (!userData) {
-      await this.createSocialLogin(user.data.id, 1);
+    if (!userData || !userData.userId) {
+      if (!userData) await this.createSocialLogin(user.data.id, 1);
       throw new HttpException(
         {
           statusCode: HttpStatus.UNAUTHORIZED,

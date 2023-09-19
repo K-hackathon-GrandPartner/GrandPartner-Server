@@ -33,7 +33,7 @@ export class LoginResponseDto {
 // DB에 존재하지 않을 때
 export class NotExistUserResponseDto {
   @ApiProperty({
-    example: '3003974791',
+    example: '3003974792',
     description: '유저 식별 ID',
   })
   @IsNotEmpty()

@@ -4,7 +4,7 @@ import { IsEmpty, IsIn, IsNotEmpty } from 'class-validator';
 export class CreateUserDto {
   @ApiProperty({
     description: '유저 식별번호',
-    example: '3003974791',
+    example: '3003974792',
   })
   @IsNotEmpty()
   externalId: number;

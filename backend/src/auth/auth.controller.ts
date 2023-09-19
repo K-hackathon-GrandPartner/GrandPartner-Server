@@ -65,6 +65,14 @@ export class AuthController {
             description:
               '소셜 로그인을 한 기록이 없는 유저가 회원가입을 시도할 경우에 발생합니다. 로그인을 시도해주세요.',
           },
+          '같은 전화번호로 가입된 유저가 있을 경우': {
+            value: {
+              statusCode: 400,
+              message: '같은 전화번호로 가입된 유저가 이미 존재합니다.',
+            },
+            description:
+              '같은 전화번호로 가입된 유저가 있을 경우에 발생합니다.',
+          },
         },
       },
     },
@@ -75,7 +83,14 @@ export class AuthController {
     );
     if (!isExist) return new ResponseDto(400, '유효하지 않은 식별 ID입니다.');
     if (isExist.userId) return new ResponseDto(400, '이미 가입된 유저입니다.');
-    //TODO: 회원가입 로직
-    const result = await this.userService.createUser(data);
+
+    const user = await this.userService.createUser(data);
+    const [accessToken, refreshToken] = await Promise.all([
+      this.authService.generateAccessToken(user.id),
+      this.authService.generateRefreshToken(user.id),
+    ]);
+    return new ResponseDto(200, '성공', {
+      accessToken,
+    });
   }
 }

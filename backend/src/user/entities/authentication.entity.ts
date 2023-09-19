@@ -8,7 +8,6 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-@Index('cellPhone', ['cellPhone'], { unique: true })
 @Entity('authentication', { database: 'member' })
 export class Authentication {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
@@ -18,7 +17,7 @@ export class Authentication {
   @JoinColumn({ name: 'user_id' })
   userId: number;
 
-  @Column('varchar', { name: 'cell_phone', length: 128 })
+  @Column('varchar', { name: 'cell_phone', length: 128, unique: true })
   cellPhone: string;
 
   @Column('tinyint', {

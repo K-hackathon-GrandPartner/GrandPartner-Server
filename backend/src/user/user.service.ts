@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { formatLoginType, formatReligion, formatSex } from './utils/format';
@@ -46,16 +46,33 @@ export class UserService {
           : null, // TODO: 입학증명서 이미지 Base64 -> 구글 클라우드 스토리지에 저장 후 URL로 변경
       });
 
-    const createAuthentication = await this.authenticationRepository.save({
-      userId: createUser.id,
-      cellPhone: createUserData.cellPhone,
-      sex: formatSex(createUserData.sex),
-      birth: createUserData.birth,
-      marketingConsent: createUserData.marketingConsent ? 1 : 0,
-    });
+    try {
+      const createAuthentication = await this.authenticationRepository.save({
+        userId: createUser.id,
+        cellPhone: createUserData.cellPhone,
+        sex: formatSex(createUserData.sex),
+        birth: createUserData.birth,
+        marketingConsent: createUserData.marketingConsent ? 1 : 0,
+      });
+    } catch (error) {
+      if (
+        error instanceof QueryFailedError &&
+        error.message.includes('Duplicate entry')
+      ) {
+        throw new HttpException(
+          {
+            statusCode: HttpStatus.BAD_REQUEST,
+            message: '같은 전화번호로 가입된 유저가 이미 존재합니다.',
+          },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+    }
     await this.authService.updateUserByExternalId(
       createUserData.externalId,
       createUser.id,
     );
+
+    return createUser;
   }
 }
