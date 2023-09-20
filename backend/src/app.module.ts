@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { RoomModule } from './room/room.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { ContractModule } from './contract/contract.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -25,9 +26,10 @@ import * as Joi from 'joi';
         GCP_STORAGE_MEDIA_BUCKET: Joi.string().required(),
       }),
     }),
+    AuthModule,
     RoomModule,
     UserModule,
-    AuthModule,
+    ContractModule,
   ],
   controllers: [AppController],
   providers: [AppService],
