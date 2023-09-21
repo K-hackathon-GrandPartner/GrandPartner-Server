@@ -74,7 +74,7 @@ export class AuthService {
       if (!userData) await this.createSocialLogin(user.data.id, 1);
       throw new HttpException(
         {
-          statusCode: HttpStatus.UNAUTHORIZED,
+          statusCode: HttpStatus.CREATED,
           message: '유저가 존재하지 않습니다. 회원가입을 진행해주세요.',
           result: {
             externalId: user.data.id,
@@ -83,7 +83,7 @@ export class AuthService {
             gender: formatSex(user.data.kakao_account.gender),
           },
         },
-        HttpStatus.UNAUTHORIZED,
+        HttpStatus.CREATED,
       );
     }
     return userData.userId;

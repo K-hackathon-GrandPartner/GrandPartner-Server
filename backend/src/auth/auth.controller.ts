@@ -27,7 +27,7 @@ export class AuthController {
     type: LoginResponseDto,
   })
   @ApiResponse({
-    status: 400,
+    status: 201,
     description: '유저 정보가 DB에 존재하지 않음',
     type: NotExistUserResponseDto,
   })
