@@ -75,4 +75,39 @@ export class UserService {
 
     return createUser;
   }
+
+  async deleteUser(userId: number): Promise<any> {
+    try {
+      const deleteUser = await this.userRepository
+        .createQueryBuilder()
+        .delete()
+        .from(User)
+        .where('id = :userId', { userId })
+        .execute();
+
+      const deleteProfile = await this.profileRepository
+        .createQueryBuilder()
+        .delete()
+        .from(Profile)
+        .where('userId = :userId', { userId })
+        .execute();
+
+      const deleteEnrollmentVerification =
+        await this.enrollmentVerificationRepository
+          .createQueryBuilder()
+          .delete()
+          .from(EnrollmentVerification)
+          .where('userId = :userId', { userId })
+          .execute();
+
+      const deleteAuthentication = await this.authenticationRepository
+        .createQueryBuilder()
+        .delete()
+        .from(Authentication)
+        .where('userId = :userId', { userId })
+        .execute();
+    } catch (err) {
+      throw new HttpException('유효하지 않은 유저입니다.', 400);
+    }
+  }
 }

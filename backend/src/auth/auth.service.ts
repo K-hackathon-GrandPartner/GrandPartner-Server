@@ -124,4 +124,17 @@ export class AuthService {
     });
     return user;
   }
+
+  async deleteSocialLoginUser(userId: number) {
+    try {
+      const deleteUser = await this.socialLoginRepository
+        .createQueryBuilder()
+        .delete()
+        .from(SocialLogin)
+        .where('userId = :userId', { userId })
+        .execute();
+    } catch (err) {
+      throw new HttpException('유효하지 않은 유저입니다.', 400);
+    }
+  }
 }

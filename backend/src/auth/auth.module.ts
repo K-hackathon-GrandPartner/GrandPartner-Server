@@ -10,6 +10,7 @@ import { User } from 'src/user/entities/user.entity';
 import { Profile } from 'src/user/entities/profile.entity';
 import { EnrollmentVerification } from 'src/user/entities/enrollment_verification.entity';
 import { Authentication } from 'src/user/entities/authentication.entity';
+import { AuthGuard } from 'src/common/services/auth_guard.service';
 
 @Module({
   imports: [
@@ -36,6 +37,6 @@ import { Authentication } from 'src/user/entities/authentication.entity';
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtService, UserService],
+  providers: [AuthService, JwtService, UserService, AuthGuard],
 })
 export class AuthModule {}

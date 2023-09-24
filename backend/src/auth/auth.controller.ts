@@ -1,15 +1,22 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   LoginRequestDto,
   LoginResponseDto,
   NotExistUserResponseDto,
 } from './dto/login.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/base-response.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { TokenDto } from './dto/common-token.dto';
+import { AuthGuard } from 'src/common/services/auth_guard.service';
+import { request } from 'http';
 
 @Controller('auth')
 @ApiTags('Auth')
@@ -93,5 +100,16 @@ export class AuthController {
     return new ResponseDto(200, '성공', {
       accessToken,
     });
+  }
+
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('accessToken')
+  @Get()
+  @ApiOperation({ summary: '회원탈퇴 API' })
+  async withDrawal(@Req() request): Promise<any> {
+    const { user_id: userId } = request['user'];
+    await this.authService.deleteSocialLoginUser(userId);
+    await this.userService.deleteUser(userId);
+    return new ResponseDto(200, '성공');
   }
 }
