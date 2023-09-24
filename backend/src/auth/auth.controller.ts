@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {
   LoginRequestDto,
@@ -104,10 +112,15 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @ApiBearerAuth('accessToken')
-  @Get()
+  @Delete()
   @ApiOperation({ summary: '회원탈퇴 API' })
   async withDrawal(@Req() request): Promise<any> {
     const { user_id: userId } = request['user'];
+    if (!userId)
+      return new ResponseDto(
+        400,
+        '유효하지 않은 유저이거나, 이미 삭제 처리 된 유저입니다.',
+      );
     await this.authService.deleteSocialLoginUser(userId);
     await this.userService.deleteUser(userId);
     return new ResponseDto(200, '성공');
