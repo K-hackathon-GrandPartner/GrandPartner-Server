@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Room } from './room.entity';
 
-@Entity('care_service', { schema: 'room' })
+@Entity('care_service', { database: 'room' })
 export class CareService {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;

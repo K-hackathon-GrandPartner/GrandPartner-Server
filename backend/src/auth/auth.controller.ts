@@ -89,6 +89,7 @@ export class AuthController {
       this.authService.generateAccessToken(user.id),
       this.authService.generateRefreshToken(user.id),
     ]);
+    console.log(accessToken);
     return new ResponseDto(200, '성공', {
       accessToken,
     });

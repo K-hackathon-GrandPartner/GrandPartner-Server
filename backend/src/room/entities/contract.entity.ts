@@ -9,7 +9,7 @@ import {
 import { Room } from './room.entity';
 import { CheckList } from './check_list.entity';
 
-@Entity('contract', { schema: 'room' })
+@Entity('contract', { database: 'room' })
 export class Contract {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;

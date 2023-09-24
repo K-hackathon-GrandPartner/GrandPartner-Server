@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Contract } from './contract.entity';
 
-@Entity('check_list', { schema: 'room' })
+@Entity('check_list', { database: 'room' })
 export class CheckList {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;

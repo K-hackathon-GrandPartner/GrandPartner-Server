@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { Room } from './room.entity';
 
-@Entity('image', { schema: 'room' })
+@Entity('image', { database: 'room' })
 export class Image {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;

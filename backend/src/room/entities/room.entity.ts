@@ -15,7 +15,7 @@ import { Safety } from './safety.entity';
 import { Address } from './address.entity';
 import { Contract } from './contract.entity';
 
-@Entity('room', { schema: 'room' })
+@Entity('room', { database: 'room' })
 export class Room {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;
