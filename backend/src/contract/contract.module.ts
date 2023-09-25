@@ -5,6 +5,7 @@ import { RoomModule } from 'src/room/room.module';
 import { JwtService } from '@nestjs/jwt';
 
 @Module({
+  imports: [RoomModule],
   controllers: [ContractController],
   providers: [ContractService, JwtService],
 })
