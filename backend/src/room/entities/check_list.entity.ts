@@ -15,4 +15,14 @@ export class CheckList {
   @ManyToOne(() => Contract, (contract) => contract.checkLists)
   @JoinColumn({ name: 'contract_id' })
   contractId: number;
+
+  @Column('tinyint', {
+    name: 'cycle_type',
+    unsigned: true,
+    default: () => "'0'",
+  })
+  cycleType: number;
+
+  @Column('varchar', { name: 'content', length: 128 })
+  content: string;
 }
