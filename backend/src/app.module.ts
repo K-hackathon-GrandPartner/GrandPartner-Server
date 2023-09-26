@@ -6,6 +6,7 @@ import { RoomModule } from './room/room.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ContractModule } from './contract/contract.module';
+import { MagazineModule } from './magazine/magazine.module';
 import * as Joi from 'joi';
 
 @Module({
@@ -30,6 +31,7 @@ import * as Joi from 'joi';
     RoomModule,
     UserModule,
     ContractModule,
+    MagazineModule,
   ],
   controllers: [AppController],
   providers: [AppService],
