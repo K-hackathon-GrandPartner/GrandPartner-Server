@@ -6,16 +6,23 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { MagazineService } from './magazine.service';
 import { CreateMagazineDto } from './dto/create-magazine.dto';
 import { UpdateMagazineDto } from './dto/update-magazine.dto';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { ResponseDto } from 'src/common/dto/base-response.dto';
 import {
   MagazineResponseDto,
   MagazinesResponseDto,
 } from './dto/magazine-response.dto';
+import { AuthGuard } from 'src/common/services/auth_guard.service';
 
 @Controller('magazine')
 @ApiTags('Magazine')
@@ -25,6 +32,8 @@ export class MagazineController {
     this.response = new ResponseDto(200, '성공'); // 초기화
   }
 
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('accessToken')
   @Get()
   @ApiOperation({ summary: '매거진 조회 API' })
   @ApiResponse({
@@ -37,6 +46,8 @@ export class MagazineController {
     return new ResponseDto(200, '성공', result);
   }
 
+  @UseGuards(AuthGuard)
+  @ApiBearerAuth('accessToken')
   @Get(':id')
   @ApiOperation({ summary: '매거진 상세 조회 API' })
   @ApiResponse({

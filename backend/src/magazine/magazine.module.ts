@@ -4,6 +4,8 @@ import { MagazineController } from './magazine.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { Magazine } from './entities/magazine.entity';
+import { AuthGuard } from 'src/common/services/auth_guard.service';
+import { JwtService } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -24,6 +26,6 @@ import { Magazine } from './entities/magazine.entity';
     TypeOrmModule.forFeature([Magazine]),
   ],
   controllers: [MagazineController],
-  providers: [MagazineService],
+  providers: [MagazineService, JwtService],
 })
 export class MagazineModule {}
