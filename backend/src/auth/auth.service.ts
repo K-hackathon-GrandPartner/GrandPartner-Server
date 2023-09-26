@@ -41,7 +41,7 @@ export class AuthService {
       { user_id: userId },
       {
         secret: 'process.env.JWT_SECRET_KEY',
-        expiresIn: '10s',
+        expiresIn: '5m',
         subject: 'access_token',
       },
     );
