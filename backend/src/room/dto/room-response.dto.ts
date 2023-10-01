@@ -84,6 +84,9 @@ export class RoomResponseDto {
   @ApiProperty({ description: '방 크기(m^2)', example: 15.23 })
   roomSize: number;
 
+  @ApiProperty({ description: '방 크기(한글)', example: '중형' })
+  roomSizeType: string;
+
   @ApiProperty({ description: '입주 가능일', example: '중순협의' })
   moveInDate: string;
 

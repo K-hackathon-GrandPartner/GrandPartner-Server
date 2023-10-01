@@ -176,7 +176,8 @@ export class RoomService {
         postDate: formatDate(String(restRoom.postDate)),
         updateDate: formatDate(String(restRoom.updateDate)),
         images: images.map((img) => img.imageUrl),
-        roomSize: formatRoomSizeType(restRoom.roomSize),
+        roomSize: restRoom.roomSize,
+        roomSizeType: formatRoomSizeType(restRoom.roomSize),
         detail: {
           ...omitId(detail),
           title: detail.title,
