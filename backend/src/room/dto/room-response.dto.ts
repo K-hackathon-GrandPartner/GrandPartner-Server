@@ -116,6 +116,24 @@ export class RoomResponseDto {
   detail: { title: string; content: string };
 
   @ApiProperty({
+    description: '임대인 프로필',
+    example: {
+      id: 48,
+      profileImageUrl: 'https://test.jpg',
+      name: '김덕배',
+      rating: 4.5,
+      reviewCount: 4,
+    },
+  })
+  landlordProfile: {
+    id: number;
+    profileImageUrl: string;
+    name: string;
+    rating: number;
+    reviewCount: number;
+  };
+
+  @ApiProperty({
     description: '방 옵션',
   })
   option: {
