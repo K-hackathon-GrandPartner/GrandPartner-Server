@@ -11,6 +11,7 @@ import { Profile } from 'src/user/entities/profile.entity';
 import { EnrollmentVerification } from 'src/user/entities/enrollment_verification.entity';
 import { Authentication } from 'src/user/entities/authentication.entity';
 import { AuthGuard } from 'src/common/services/auth_guard.service';
+import { Rating } from 'src/user/entities/rating.entity';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { AuthGuard } from 'src/common/services/auth_guard.service';
       Profile,
       EnrollmentVerification,
       Authentication,
+      Rating,
     ]),
   ],
   controllers: [AuthController],

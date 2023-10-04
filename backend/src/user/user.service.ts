@@ -8,6 +8,7 @@ import { AuthService } from 'src/auth/auth.service';
 import { Profile } from './entities/profile.entity';
 import { EnrollmentVerification } from './entities/enrollment_verification.entity';
 import { Authentication } from './entities/authentication.entity';
+import { Rating } from './entities/rating.entity';
 
 @Injectable()
 export class UserService {
@@ -21,7 +22,17 @@ export class UserService {
     private readonly enrollmentVerificationRepository: Repository<EnrollmentVerification>,
     @InjectRepository(Authentication)
     private readonly authenticationRepository: Repository<Authentication>,
+    @InjectRepository(Rating)
+    private readonly ratingRepository: Repository<Rating>,
   ) {}
+
+  async getLandlordRating(landlordId: number) {
+    const landlordRating = await this.ratingRepository.findOne({
+      where: { landlordId },
+    });
+
+    return landlordRating;
+  }
 
   async createUser(createUserData: CreateUserDto): Promise<any> {
     const createUser = await this.userRepository.save({

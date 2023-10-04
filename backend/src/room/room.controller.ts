@@ -92,8 +92,8 @@ export class RoomController {
     return this.response;
   }
 
-  @UseGuards(AuthGuard)
-  @ApiBearerAuth('accessToken')
+  // @UseGuards(AuthGuard)
+  // @ApiBearerAuth('accessToken')
   @Get(':id')
   @ApiOperation({ summary: '방 상세 조회 API' })
   @ApiResponse({

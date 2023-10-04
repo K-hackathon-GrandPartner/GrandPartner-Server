@@ -118,7 +118,7 @@ export class RoomResponseDto {
   @ApiProperty({
     description: '임대인 프로필',
     example: {
-      id: 48,
+      userId: 48,
       profileImageUrl: 'https://test.jpg',
       name: '김덕배',
       rating: 4.5,

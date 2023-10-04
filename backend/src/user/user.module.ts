@@ -10,6 +10,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Profile } from './entities/profile.entity';
 import { EnrollmentVerification } from './entities/enrollment_verification.entity';
 import { Authentication } from './entities/authentication.entity';
+import { Rating } from './entities/rating.entity';
 
 @Module({
   imports: [
@@ -32,10 +33,12 @@ import { Authentication } from './entities/authentication.entity';
       SocialLogin,
       Profile,
       EnrollmentVerification,
+      Rating,
       Authentication,
     ]),
   ],
   controllers: [UserController],
   providers: [UserService, AuthService, JwtService],
+  exports: [TypeOrmModule.forFeature([User, Rating])],
 })
 export class UserModule {}

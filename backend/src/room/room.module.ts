@@ -6,9 +6,11 @@ import { Room } from './entities/room.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthGuard } from 'src/common/services/auth_guard.service';
 import { JwtService } from '@nestjs/jwt';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
+    UserModule,
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

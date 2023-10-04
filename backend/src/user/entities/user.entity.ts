@@ -2,6 +2,7 @@ import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { Profile } from './profile.entity';
 import { EnrollmentVerification } from './enrollment_verification.entity';
 import { Authentication } from './authentication.entity';
+import { Rating } from './rating.entity';
 
 @Entity('user', { database: 'member' })
 export class User {
@@ -44,4 +45,7 @@ export class User {
 
   @OneToOne(() => Authentication, (authentication) => authentication.userId)
   authentication: Authentication;
+
+  @OneToOne(() => Rating, (rating) => rating.landlordId)
+  rating: Rating;
 }

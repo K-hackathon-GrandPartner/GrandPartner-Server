@@ -21,12 +21,15 @@ import {
   stringArrayWhereClause,
 } from './utils/whereClause';
 import { RoomFilterDto } from './dto/filter-room.dto';
+import { User } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class RoomService {
   constructor(
     @InjectRepository(Room)
     private readonly roomRepository: Repository<Room>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {
     this.roomRepository = roomRepository;
   }
@@ -153,6 +156,14 @@ export class RoomService {
       .where('room.id = :id', { id })
       .getOne();
 
+    const landlord = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.rating', 'rating')
+      .leftJoinAndSelect('user.profile', 'profile')
+      .where('user.id = :id', { id: room.landlordId })
+      .getOne();
+    console.log(landlord);
+
     if (room) {
       const {
         images,
@@ -178,6 +189,13 @@ export class RoomService {
         images: images.map((img) => img.imageUrl),
         roomSize: restRoom.roomSize,
         roomSizeType: formatRoomSizeType(restRoom.roomSize),
+        landlordProfile: {
+          userId: restRoom.landlordId,
+          name: landlord.userName,
+          profileImageUrl: landlord.profile.imageUrl,
+          rating: landlord.rating.rating,
+          reviewCount: landlord.rating.reviewCount,
+        },
         detail: {
           ...omitId(detail),
           title: detail.title,
