@@ -14,6 +14,9 @@ export class Magazine {
   @Column('varchar', { name: 'title', length: 128 })
   title: string;
 
+  @Column('varchar', { name: 'names', length: 64 })
+  names: string;
+
   @Column('text', { name: 'content' })
   content: string;
 }

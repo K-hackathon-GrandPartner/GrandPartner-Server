@@ -22,6 +22,12 @@ export class MagazinesResponseDto {
     example: '부자 할머니와 연예인 손녀',
   })
   title: string;
+
+  @ApiProperty({
+    description: '매거진 주인공들',
+    example: '정정옥 어르신 & 송예지 학생',
+  })
+  names: string;
 }
 
 export class MagazineResponseDto extends MagazinesResponseDto {

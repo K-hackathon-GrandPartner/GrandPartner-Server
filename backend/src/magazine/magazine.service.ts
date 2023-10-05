@@ -21,11 +21,15 @@ export class MagazineService {
         'magazine.imageUrl',
         'magazine.tag',
         'magazine.title',
+        'magazine.names',
       ])
       .getMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} magazine`;
+    return this.magazineRepository
+      .createQueryBuilder('magazine')
+      .where('magazine.id = :id', { id })
+      .getOne();
   }
 }
