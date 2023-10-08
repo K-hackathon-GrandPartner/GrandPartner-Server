@@ -16,19 +16,14 @@ export class MagazineService {
   findAll() {
     return this.magazineRepository
       .createQueryBuilder('magazine')
-      .select([
-        'magazine.id',
-        'magazine.imageUrl',
-        'magazine.tag',
-        'magazine.title',
-        'magazine.names',
-      ])
+      .select(['magazine.id', 'magazine.imageUrl'])
       .getMany();
   }
 
   findOne(id: number) {
     return this.magazineRepository
       .createQueryBuilder('magazine')
+      .select(['magazine.id', 'magazine.imageUrl', 'magazine.content'])
       .where('magazine.id = :id', { id })
       .getOne();
   }
