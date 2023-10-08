@@ -26,6 +26,6 @@ import { JwtService } from '@nestjs/jwt';
     TypeOrmModule.forFeature([Magazine]),
   ],
   controllers: [MagazineController],
-  providers: [MagazineService, JwtService],
+  providers: [MagazineService, AuthGuard, JwtService],
 })
 export class MagazineModule {}

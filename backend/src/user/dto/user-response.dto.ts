@@ -12,13 +12,13 @@ export class LandRordResponseDto {
 
   @ApiProperty({
     description: '임대인 이름',
-    example: '장동호',
+    example: '김덕배',
   })
   name: string;
 
   @ApiProperty({
     description: '임대인 소개',
-    example: '안녕하세요 장동호입니다.',
+    example: '안녕하세요 김덕배입니다.',
   })
   introduction: string;
 
@@ -37,7 +37,7 @@ export class LandRordResponseDto {
 
 export class ReviewDto {
   @ApiProperty({ description: '임차인 ID', example: 1 })
-  id: number;
+  lesseeId: number;
 
   @ApiProperty({
     description: '임차인 프로필 사진 URL',
@@ -62,31 +62,24 @@ export class ReviewDto {
     example: '방이 너무 좋아요',
   })
   content: string;
+
+  @ApiProperty({
+    description: '리뷰 작성 날짜',
+    example: '2021-08-01',
+  })
+  postDate: string;
+
+  @ApiProperty({
+    description: '리뷰 수정 날짜',
+    example: '2021-08-01',
+  })
+  updateDate: string;
 }
 
 export class LandRordProfileDto extends LandRordResponseDto {
   @ApiProperty({
     description: '임대인 리뷰',
-    example: [
-      {
-        id: 1,
-        profileImageUrl: 'https://...',
-        name: '장동호',
-        rating: 4.5,
-        content: '방이 너무 좋아요',
-        postDate: '2021-08-01',
-        updateDate: '2021-08-01',
-      },
-      {
-        id: 2,
-        profileImageUrl: 'https://...',
-        name: '장동호',
-        rating: 4.5,
-        content: '방이 너무 좋아요',
-        postDate: '2021-08-01',
-        updateDate: '2021-08-01',
-      },
-    ],
+    type: ReviewDto,
   })
-  reviews: ReviewDto[];
+  review: ReviewDto;
 }

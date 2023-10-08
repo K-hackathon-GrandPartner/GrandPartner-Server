@@ -10,6 +10,7 @@ import { EnrollmentVerification } from './entities/enrollment_verification.entit
 import { Authentication } from './entities/authentication.entity';
 import { Rating } from './entities/rating.entity';
 import { LandRordProfileDto } from './dto/user-response.dto';
+import { Room } from 'src/room/entities/room.entity';
 
 @Injectable()
 export class UserService {
@@ -25,6 +26,8 @@ export class UserService {
     private readonly authenticationRepository: Repository<Authentication>,
     @InjectRepository(Rating)
     private readonly ratingRepository: Repository<Rating>,
+    @InjectRepository(Room)
+    private readonly roomRepository: Repository<Room>,
   ) {}
 
   async findOne(userId: number): Promise<LandRordProfileDto> {
@@ -35,6 +38,40 @@ export class UserService {
       .where('user.id = :id', { id: userId })
       .getOne();
 
+    const contracts = await this.roomRepository
+      .createQueryBuilder('room')
+      .leftJoinAndSelect('room.contract', 'contract')
+      .where('room.landlordId = :userId', { userId })
+      .getMany()
+      .then((result) => {
+        // Contract가 있는 Room만 필터링
+        return result.filter((room) => {
+          return room.contract !== null;
+        });
+      });
+
+    let review;
+
+    if (contracts.length !== 0) {
+      const contractIds = contracts.map((room) => ({
+        contractId: room.contract.id,
+        lesseeId: room.contract.lesseeId,
+      }));
+
+      review = await this.roomRepository
+        .createQueryBuilder('room')
+        .leftJoinAndSelect('room.contract', 'contract')
+        .leftJoinAndSelect('contract.review', 'review')
+        .where('contract.id IN (:...contractIds)', {
+          contractIds: contractIds.map(({ contractId }) => contractId),
+        }) // .map()을 사용하여 contractIds 추출
+        .leftJoinAndSelect('review.user', 'user')
+        .leftJoinAndSelect('user.profile', 'profile')
+        .getOne();
+
+      console.log(review.contract.review);
+    }
+
     return {
       id: landlord.id,
       profileImageUrl: landlord.profile.imageUrl,
@@ -42,7 +79,15 @@ export class UserService {
       introduction: landlord.profile.introduction,
       rating: landlord.rating.rating,
       reviewCount: landlord.rating.reviewCount,
-      reviews: [],
+      review: {
+        lesseeId: review?.contract.review.user.id,
+        profileImageUrl: review?.contract.review.user.profile.imageUrl,
+        name: review?.contract.review.user.userName,
+        rating: review?.contract.review.rating,
+        content: review?.contract.review.content,
+        postDate: review?.contract.review.postDate,
+        updateDate: review?.contract.review.updateDate,
+      },
     };
   }
 

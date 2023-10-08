@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Global, Module } from '@nestjs/common';
 import { RoomService } from './room.service';
 import { RoomController } from './room.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,6 +8,7 @@ import { AuthGuard } from 'src/common/services/auth_guard.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserModule } from 'src/user/user.module';
 
+@Global()
 @Module({
   imports: [
     UserModule,

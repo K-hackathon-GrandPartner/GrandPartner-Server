@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Room } from './room.entity';
 import { CheckList } from './check_list.entity';
+import { Review } from './review.entity';
 
 @Entity('contract', { database: 'room' })
 export class Contract {
@@ -44,4 +45,7 @@ export class Contract {
 
   @OneToMany(() => CheckList, (checkList) => checkList.contractId)
   checkLists: CheckList[];
+
+  @OneToOne(() => Review, (review) => review.contractId)
+  review: Review;
 }

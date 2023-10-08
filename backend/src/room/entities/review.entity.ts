@@ -1,18 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/user/entities/user.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Contract } from './contract.entity';
 
 @Entity('review', { database: 'room' })
 export class Review {
   @PrimaryGeneratedColumn({ type: 'int', name: 'id', unsigned: true })
   id: number;
 
-  @Column('int', { name: 'contract_id', unsigned: true })
+  @JoinColumn({ name: 'contract_id' })
+  @OneToOne(() => Contract, (contract) => contract.review)
   contractId: number;
 
-  @Column('int', { name: 'landlord_id', unsigned: true })
-  landlordId: number;
-
-  @Column('int', { name: 'lessee_id', unsigned: true })
-  lesseeId: number;
+  @JoinColumn({ name: 'lessee_id' })
+  @OneToOne(() => User)
+  user: User;
 
   @Column('int', { name: 'rating', unsigned: true })
   rating: number;

@@ -11,6 +11,8 @@ import { Profile } from './entities/profile.entity';
 import { EnrollmentVerification } from './entities/enrollment_verification.entity';
 import { Authentication } from './entities/authentication.entity';
 import { Rating } from './entities/rating.entity';
+import { AuthGuard } from 'src/common/services/auth_guard.service';
+import { Room } from 'src/room/entities/room.entity';
 
 @Module({
   imports: [
@@ -35,10 +37,11 @@ import { Rating } from './entities/rating.entity';
       EnrollmentVerification,
       Rating,
       Authentication,
+      Room,
     ]),
   ],
   controllers: [UserController],
-  providers: [UserService, AuthService, JwtService],
+  providers: [UserService, AuthService, AuthGuard, JwtService],
   exports: [TypeOrmModule.forFeature([User, Rating])],
 })
 export class UserModule {}

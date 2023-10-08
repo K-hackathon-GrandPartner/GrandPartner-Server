@@ -126,7 +126,7 @@ export class RoomResponseDto {
     },
   })
   landlordProfile: {
-    id: number;
+    userId: number;
     profileImageUrl: string;
     name: string;
     rating: number;
