@@ -12,6 +12,26 @@ export class ContractService {
     private readonly roomRepository: Repository<Room>,
   ) {}
 
+  async getContractIdsByLandlordId(landlordId: number) {
+    const result = await this.roomRepository
+      .createQueryBuilder('room')
+      .leftJoinAndSelect('room.contract', 'contract')
+      .where('contract.landlordId = :landlordId', { landlordId })
+      .getMany();
+
+    if (!result) {
+      return [];
+    }
+
+    console.log(result);
+
+    const contractIds = result.map((room) => {
+      return room.contract.id;
+    });
+
+    return contractIds;
+  }
+
   async getCheckList(userId: number) {
     const result = await this.roomRepository
       .createQueryBuilder('room')

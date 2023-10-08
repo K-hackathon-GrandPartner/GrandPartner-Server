@@ -162,7 +162,6 @@ export class RoomService {
       .leftJoinAndSelect('user.profile', 'profile')
       .where('user.id = :id', { id: room.landlordId })
       .getOne();
-    console.log(landlord);
 
     if (room) {
       const {

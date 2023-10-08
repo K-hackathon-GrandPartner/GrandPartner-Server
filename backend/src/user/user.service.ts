@@ -9,6 +9,7 @@ import { Profile } from './entities/profile.entity';
 import { EnrollmentVerification } from './entities/enrollment_verification.entity';
 import { Authentication } from './entities/authentication.entity';
 import { Rating } from './entities/rating.entity';
+import { LandRordProfileDto } from './dto/user-response.dto';
 
 @Injectable()
 export class UserService {
@@ -25,6 +26,25 @@ export class UserService {
     @InjectRepository(Rating)
     private readonly ratingRepository: Repository<Rating>,
   ) {}
+
+  async findOne(userId: number): Promise<LandRordProfileDto> {
+    const landlord = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.rating', 'rating')
+      .leftJoinAndSelect('user.profile', 'profile')
+      .where('user.id = :id', { id: userId })
+      .getOne();
+
+    return {
+      id: landlord.id,
+      profileImageUrl: landlord.profile.imageUrl,
+      name: landlord.userName,
+      introduction: landlord.profile.introduction,
+      rating: landlord.rating.rating,
+      reviewCount: landlord.rating.reviewCount,
+      reviews: [],
+    };
+  }
 
   async getLandlordRating(landlordId: number) {
     const landlordRating = await this.ratingRepository.findOne({
